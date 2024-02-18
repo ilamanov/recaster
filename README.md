@@ -24,6 +24,8 @@ Here is what Neobrutalism theme looks like:
 
 You can add your own components too! **You can remix your Farcaster experience by deploying your own components and using them permissionlessly!**
 
+If you want to go fully trustless, you can clone this repo and serve your own wrapper. You own the entire code!
+
 ## Why on-chain UI?
 
 UI components and smart contracts have a lot in common. They are bother very composable and benefit from being decentralized.

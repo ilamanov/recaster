@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Recaster is <i>remixable</i> Farcaster client. Recaster allows you to remix your Farcaster experience to your liking. It's available at [recaster.vercel.app](https://recaster.vercel.app/).
 
-## Getting Started
+## How does it work?
 
-First, run the development server:
+This repo is a simple Next.js wrapper around the core on-chain components. The core components of the Farcaster client like the rendering of casts, the feed, the user profile, etc happens on-chain (on Base Sepolia). The Next.js wrapper is rendered off-chain. The Next.js wrapper serves the HTML returned from the on-chain contracts in an iframe.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+![Components](assets/components.png)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Here are the components used in the above screenshot:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- User summary: [0x940303f089f4450a2398a8ed1c192929f070128b](https://sepolia.basescan.org/address/0x940303f089f4450a2398a8ed1c192929f070128b#code)
+- Feed: [0xa046db7dbaac6a26913af2007d3f0f5978001893](https://sepolia.basescan.org/address/0xa046db7dbaac6a26913af2007d3f0f5978001893#code)
+- Cast: [0x710c7f4dbe1ea035a3f75d1e6607bdb58b92f42f](https://sepolia.basescan.org/address/0x710c7f4dbe1ea035a3f75d1e6607bdb58b92f42f#code)
+- Theme: [0xe91b043472ba7067a898a42b1f1881713dd5c4b7](https://sepolia.basescan.org/address/0xe91b043472ba7067a898a42b1f1881713dd5c4b7#code)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+There are additional component already deployed to Base Sepolia which you can use by entering the address in the `On-chain component config` on the right bar of Recaster.
 
-## Learn More
+- Neobrutalism theme: [0x23f943b9bf6b6f0791ca17126ff89c2968abd6a1](https://sepolia.basescan.org/address/0x23f943b9bf6b6f0791ca17126ff89c2968abd6a1#code)
 
-To learn more about Next.js, take a look at the following resources:
+You can add your own components too! **You can remix your Farcaster experience by deploying your own components and using them permissionlessly!**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Why on-chain UI?
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+UI components and smart contracts have a lot in common. They are bother very composable and benefit from being decentralized.
 
-## Deploy on Vercel
+On-chain UI might look ugly (see screenshot below) and probably wasteful for blockchain storage but having the UI code on-chain opens up lots of opportunities.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+For example, it allows us to build products in a decentralized manner. Imagine building an Etherscan clone (or a Farcaster client). Someones builds a search bar, someone else builds a transaction table, etc. And the whole product can be built by small contributions from a lot of people. And these contributions can be rewarded by tokens or NFTs.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+On-chain UI also opens up opportunities for UI marketplaces. People can create pretty UI components and others can use them in their projects for a small fee.
+
+Here is the `UserSummary` component to demonstrate what on-chain UI looks like. It looks ugly but with the right tooling in the future, it can be made much better.
+
+![user summary component](assets/on-chain-contract.png)
+
+## Want to work together?
+
+DM me on Twitter or Telegram (@nazar_ilamanov) and we can work on this together!

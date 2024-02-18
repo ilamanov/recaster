@@ -4,9 +4,9 @@ import { LOCAL_TEST_COMPONENT_CAST } from "../components/local-test-components/c
 import { LOCAL_TEST_COMPONENT_FEED } from "../components/local-test-components/feed";
 import { LOCAL_TEST_THEME } from "../components/local-test-components/theme";
 import { LOCAL_TEST_COMPONENT_USER_SUMMARY } from "../components/local-test-components/user-summary";
-import { CAST_ABI, THEME_ABI, USER_SUMMARY_ABI } from "./abi";
+import { CAST_ABI, FEED_ABI, THEME_ABI, USER_SUMMARY_ABI } from "./abi";
 import { Chain } from "./chains";
-import { OnChainComponentProps } from "./types";
+import { CastProps, OnChainComponentProps } from "./types";
 import { getPublicClient } from "./viem";
 
 const chain: Chain = "BASE_SEPOLIA";
@@ -64,7 +64,18 @@ export async function fetchComponent({
         themeComponentAddress
       );
     }
-    return "Feed component not implemented";
+
+    return await publicClient.readContract({
+      address: address,
+      abi: FEED_ABI,
+      functionName: "getComponent",
+      args: [
+        data.map(convertCast),
+        colorTheme === "light" ? 0 : 1,
+        screenSize === "sm" ? 0 : 1,
+        themeComponentAddress,
+      ],
+    });
   } else if (componentType === "cast") {
     if (isAddressEqual(address, zeroAddress)) {
       return LOCAL_TEST_COMPONENT_CAST(
@@ -80,71 +91,7 @@ export async function fetchComponent({
       abi: CAST_ABI,
       functionName: "getComponent",
       args: [
-        {
-          hash: data.hash,
-          timeDelta: data.timeDelta,
-          text: data.text,
-          recastsCount: BigInt(data.recastsCount),
-          likesCount: BigInt(data.likesCount),
-          repliesCount: BigInt(data.repliesCount),
-          author: {
-            fid: data.author.fid.toString(),
-            username: data.author.username,
-            displayName: data.author.displayName,
-            pfpUrl: data.author.pfpUrl,
-          },
-          isInChannel: !!data.channel,
-          channel: {
-            name: data.channel?.name || "",
-            imageUrl: data.channel?.imageUrl || "",
-          },
-          embeds: data.embeds.map((embed) => ({
-            isCast: "cast" in embed,
-            cast:
-              "cast" in embed
-                ? {
-                    hash: embed.cast.hash,
-                    timeDelta: embed.cast.timeDelta,
-                    text: embed.cast.text,
-                    recastsCount: BigInt(embed.cast.recastsCount),
-                    likesCount: BigInt(embed.cast.likesCount),
-                    repliesCount: BigInt(embed.cast.repliesCount),
-                    author: {
-                      fid: embed.cast.author.fid.toString(),
-                      username: embed.cast.author.username,
-                      displayName: embed.cast.author.displayName,
-                      pfpUrl: embed.cast.author.pfpUrl,
-                    },
-                    isInChannel: !!embed.cast.channel,
-                    channel: embed.cast.channel
-                      ? {
-                          name: embed.cast.channel.name,
-                          imageUrl: embed.cast.channel.imageUrl,
-                        }
-                      : { name: "", imageUrl: "" },
-                  }
-                : {
-                    hash: "",
-                    timeDelta: "",
-                    text: "",
-                    recastsCount: BigInt(0),
-                    likesCount: BigInt(0),
-                    repliesCount: BigInt(0),
-                    author: {
-                      fid: "",
-                      username: "",
-                      displayName: "",
-                      pfpUrl: "",
-                    },
-                    isInChannel: false,
-                    channel: {
-                      name: "",
-                      imageUrl: "",
-                    },
-                  },
-            embedUrl: "embedUrl" in embed ? embed.embedUrl : "",
-          })),
-        },
+        convertCast(data),
         colorTheme === "light" ? 0 : 1,
         screenSize === "sm" ? 0 : 1,
         themeComponentAddress,
@@ -153,6 +100,74 @@ export async function fetchComponent({
   } else {
     return "Unknown component type for default";
   }
+}
+
+function convertCast(cast: CastProps) {
+  return {
+    hash: cast.hash,
+    timeDelta: cast.timeDelta,
+    text: cast.text,
+    recastsCount: BigInt(cast.recastsCount),
+    likesCount: BigInt(cast.likesCount),
+    repliesCount: BigInt(cast.repliesCount),
+    author: {
+      fid: cast.author.fid.toString(),
+      username: cast.author.username,
+      displayName: cast.author.displayName,
+      pfpUrl: cast.author.pfpUrl,
+    },
+    isInChannel: !!cast.channel,
+    channel: {
+      name: cast.channel?.name || "",
+      imageUrl: cast.channel?.imageUrl || "",
+    },
+    embeds: cast.embeds.map((embed) => ({
+      isCast: "cast" in embed,
+      cast:
+        "cast" in embed
+          ? {
+              hash: embed.cast.hash,
+              timeDelta: embed.cast.timeDelta,
+              text: embed.cast.text,
+              recastsCount: BigInt(embed.cast.recastsCount),
+              likesCount: BigInt(embed.cast.likesCount),
+              repliesCount: BigInt(embed.cast.repliesCount),
+              author: {
+                fid: embed.cast.author.fid.toString(),
+                username: embed.cast.author.username,
+                displayName: embed.cast.author.displayName,
+                pfpUrl: embed.cast.author.pfpUrl,
+              },
+              isInChannel: !!embed.cast.channel,
+              channel: embed.cast.channel
+                ? {
+                    name: embed.cast.channel.name,
+                    imageUrl: embed.cast.channel.imageUrl,
+                  }
+                : { name: "", imageUrl: "" },
+            }
+          : {
+              hash: "",
+              timeDelta: "",
+              text: "",
+              recastsCount: BigInt(0),
+              likesCount: BigInt(0),
+              repliesCount: BigInt(0),
+              author: {
+                fid: "",
+                username: "",
+                displayName: "",
+                pfpUrl: "",
+              },
+              isInChannel: false,
+              channel: {
+                name: "",
+                imageUrl: "",
+              },
+            },
+      embedUrl: "embedUrl" in embed ? embed.embedUrl : "",
+    })),
+  };
 }
 
 export async function fetchTheme({

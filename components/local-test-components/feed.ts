@@ -13,6 +13,7 @@ export const LOCAL_TEST_COMPONENT_FEED = async (
   return `
 <body class="${screenSize} font-sans text-sm md:text-base antialiased w-full">
   <div class="flex flex-col gap-4 rounded-md p-4" style="background-color: hsl(var(--feed-background)); color: hsl(var(--feed-foreground));">
+  LOCAL TEST
   ${casts
     .map((cast) => {
       return LOCAL_TEST_COMPONENT_INNER_CAST(cast, colorTheme, screenSize);

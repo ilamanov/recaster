@@ -139,7 +139,7 @@ export const DEFAULT_CAST_INNER_COMPONENT = (
           <h3 class="text-lg font-bold">${author.displayName}</h3>
           <p class="text-muted-foreground">@${
             author.username
-          } • ${getTimeDelta(cast.timestamp)}</p>
+          } • ${cast.timeDelta}</p>
         </div>
       </a>
 
@@ -186,56 +186,10 @@ const DEFAULT_EMBEDDED_CAST_COMPONENT = (
                 alt="${cast.author.username} profile picture"
             />
             <h3 class="text-lg font-bold">${cast.author.displayName}</h3>
-            <p class="text-muted-foreground">@${
-              cast.author.username
-            } • ${getTimeDelta(cast.timestamp)}</p>
+            <p class="text-muted-foreground">@${cast.author.username} • ${cast.timeDelta}</p>
           </div>
           <p class="whitespace-pre-wrap break-words pt-[2px]">${cast.text}</p>
           ${embed}
         </div>
         `;
 };
-
-function getTimeDelta(timestamp: string) {
-  const timeElapsed = getTimeElapsed(timestamp);
-
-  if (timeElapsed.days > 0) {
-    return `${timeElapsed.days}d`;
-  } else if (timeElapsed.hours > 0) {
-    return `${timeElapsed.hours}h`;
-  } else if (timeElapsed.minutes > 0) {
-    return `${timeElapsed.minutes}m`;
-  } else {
-    return `${timeElapsed.seconds}s`;
-  }
-}
-
-function getTimeElapsed(timestamp: string) {
-  // Parse the given timestamp
-  const pastDate = new Date(timestamp);
-
-  // Get current date
-  const currentDate = new Date();
-
-  // Calculate difference in milliseconds
-  let diff = currentDate.getTime() - pastDate.getTime();
-
-  // Convert difference to a more readable format
-  const seconds = Math.floor(diff / 1000); // Convert milliseconds to seconds
-  const minutes = Math.floor(seconds / 60); // Convert seconds to minutes
-  const hours = Math.floor(minutes / 60); // Convert minutes to hours
-  const days = Math.floor(hours / 24); // Convert hours to days
-
-  // Update diff to represent the remainder for the next largest unit
-  diff -= days * 24 * 60 * 60 * 1000;
-  diff -= (hours % 24) * 60 * 60 * 1000;
-  diff -= (minutes % 60) * 60 * 1000;
-  const remainingSeconds = Math.floor(diff / 1000);
-
-  return {
-    days,
-    hours: hours % 24,
-    minutes: minutes % 60,
-    seconds: remainingSeconds,
-  };
-}

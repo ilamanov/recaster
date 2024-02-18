@@ -10,7 +10,7 @@ export type UserSummaryProps = {
 
 export interface CastProps {
   hash: string;
-  timestamp: string;
+  timeDelta: string;
   text: string;
   recastsCount: number;
   likesCount: number;

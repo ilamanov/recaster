@@ -16,6 +16,7 @@ import { iconVariants } from "@/components/ui/icon";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { LeftColumn } from "@/components/layout/left-column";
 import { RightColumn } from "@/components/layout/right-column";
+import { SignIn } from "@/components/sign-in";
 
 const ICON_CLASS = cn(
   iconVariants({ size: "md" }),
@@ -100,7 +101,7 @@ export default function RootLayout({
                 <RightColumn />
               </div>
             </div>
-            <div className="fixed bottom-0 bg-background flex justify-between lg:hidden py-2 px-4 w-full items-center">
+            <div className="border-t fixed bottom-0 bg-background flex justify-between lg:hidden py-2 px-4 w-full items-center">
               <div className="w-1/3">
                 <Link href="/">
                   <Home className={ICON_CLASS} />
@@ -109,10 +110,8 @@ export default function RootLayout({
               <Link href="/">
                 <Search className={ICON_CLASS} />
               </Link>
-              <div className="w-1/3">
-                <Button variant="outline" className="float-right">
-                  Sign in
-                </Button>
+              <div className="w-1/3 flex justify-end">
+                <SignIn />
               </div>
             </div>
           </div>

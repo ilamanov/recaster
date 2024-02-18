@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useEffect, useState } from "react";
-import { Address, zeroAddress } from "viem";
+import { Address } from "viem";
 
 export interface ComponentConfig {
   userSummary: Address;
@@ -33,9 +33,9 @@ export function ComponentConfigProvider({
     if (localConfig === null) {
       setComponentConfig({
         userSummary: "0x940303f089f4450a2398a8ed1c192929f070128b",
-        feed: zeroAddress,
+        feed: "0xa046db7dbaac6a26913af2007d3f0f5978001893",
         cast: "0x710c7f4dbe1ea035a3f75d1e6607bdb58b92f42f",
-        theme: "0xb56d7d872f42db707f06828674f8df2a0d5ed695",
+        theme: "0xe91b043472ba7067a898a42b1f1881713dd5c4b7",
       });
     } else {
       setComponentConfig(JSON.parse(localConfig));

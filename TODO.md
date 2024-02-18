@@ -1,0 +1,3 @@
+- Take a look at .env.local.example
+- Take a look at metadata in root layout.tsx
+- For auth: uncomment all clerk lines. and rename middleware-auth to middleware

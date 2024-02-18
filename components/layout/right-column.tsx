@@ -106,7 +106,9 @@ function Inner({
       >
         <div>
           <h2 className="text-base font-bold">Onchain component config</h2>
-          <h2 className="text-base">Enter component addresses below</h2>
+          <h2 className="text-base">
+            Enter component addresses below. All contracts are on Base Sepolia.
+          </h2>
         </div>
 
         <ComponentSelector

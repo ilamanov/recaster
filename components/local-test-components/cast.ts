@@ -12,7 +12,7 @@ export const LOCAL_TEST_COMPONENT_CAST = async (
 ) => {
   return `
 <body class="${colorTheme} md font-sans text-sm md:text-base antialiased w-full">
-  ${DEFAULT_CAST_INNER_COMPONENT(cast, colorTheme, screenSize)}
+  ${LOCAL_TEST_COMPONENT_INNER_CAST(cast, colorTheme, screenSize)}
 </body>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script>
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
 </style>`;
 };
 
-export const DEFAULT_CAST_INNER_COMPONENT = (
+export const LOCAL_TEST_COMPONENT_INNER_CAST = (
   cast: CastProps,
   colorTheme: string,
   screenSize: string
@@ -79,7 +79,7 @@ export const DEFAULT_CAST_INNER_COMPONENT = (
     const firstEmbed = cast.embeds[0];
     if ("cast" in firstEmbed) {
       embed = `<a href="/cast/${firstEmbed.cast.hash}" target="_top">
-        ${DEFAULT_EMBEDDED_CAST_COMPONENT(
+        ${LOCAL_TEST_COMPONENT_EMBED_CAST(
           firstEmbed.cast,
           colorTheme,
           screenSize
@@ -159,7 +159,7 @@ export const DEFAULT_CAST_INNER_COMPONENT = (
   `;
 };
 
-const DEFAULT_EMBEDDED_CAST_COMPONENT = (
+const LOCAL_TEST_COMPONENT_EMBED_CAST = (
   cast: CastProps,
   colorTheme: string,
   screenSize: string
@@ -168,7 +168,7 @@ const DEFAULT_EMBEDDED_CAST_COMPONENT = (
   if (cast.embeds.length > 0) {
     const firstEmbed = cast.embeds[0];
     if ("cast" in firstEmbed) {
-      embed = DEFAULT_EMBEDDED_CAST_COMPONENT(
+      embed = LOCAL_TEST_COMPONENT_EMBED_CAST(
         firstEmbed.cast,
         colorTheme,
         screenSize

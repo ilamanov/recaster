@@ -1,7 +1,7 @@
 import { Address } from "viem";
 
 import { CastProps } from "../../lib/types";
-import { DEFAULT_CAST_INNER_COMPONENT } from "./cast";
+import { LOCAL_TEST_COMPONENT_INNER_CAST } from "./cast";
 import { COMMON_STYLES } from "./common";
 
 export const LOCAL_TEST_COMPONENT_FEED = async (
@@ -15,7 +15,7 @@ export const LOCAL_TEST_COMPONENT_FEED = async (
   <div class="flex flex-col gap-4 rounded-md p-4" style="background-color: hsl(var(--feed-background)); color: hsl(var(--feed-foreground));">
   ${casts
     .map((cast) => {
-      return DEFAULT_CAST_INNER_COMPONENT(cast, colorTheme, screenSize);
+      return LOCAL_TEST_COMPONENT_INNER_CAST(cast, colorTheme, screenSize);
     })
     .join("")}
   </div>

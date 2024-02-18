@@ -46,8 +46,8 @@ export const LOCAL_TEST_THEME = (colorTheme: string, screenSize: string) =>
 --muted: 215 27.9% 16.9%;
 --muted-foreground: 217.9 10.6% 64.9%;
 
---accent: 215 27.9% 16.9%;
---accent-foreground: 210 20% 98%;
+--accent: 257.31 55.91% 36.47%;
+--accent-foreground: 0 0% 100%;
 
 --destructive: 0 62.8% 30.6%;
 --destructive-foreground: 210 20% 98%;
@@ -55,4 +55,3 @@ export const LOCAL_TEST_THEME = (colorTheme: string, screenSize: string) =>
 --border: 215 27.9% 16.9%;
 --input: 215 27.9% 16.9%;
 --ring: 263.4 70% 50.4%;`;
-

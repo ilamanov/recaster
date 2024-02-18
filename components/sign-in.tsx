@@ -59,7 +59,7 @@ export function SignIn() {
 
   return (
     <ThirdwebProvider
-      activeChain="base-sepolia"
+      activeChain="base-goerli"
       clientId={process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID}
       supportedWallets={[
         metamaskWallet(),

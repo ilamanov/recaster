@@ -26,7 +26,7 @@ export default async function UserPage({
       <OnChainComponent
         componentType="userSummary"
         data={user}
-        iframeClassName="h-[200px] w-full"
+        iframeClassName="h-[250px] md:h-[200px] w-full"
       />
       <Tabs defaultValue="casts" className="w-full">
         <TabsList className="w-full">

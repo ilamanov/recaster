@@ -28,8 +28,8 @@ export function OnChainComponent({
     if (componentConfigContext.componentConfig !== null) {
       fetchComponent({
         address: componentConfigContext.componentConfig[componentType],
-        componentType,
-        data,
+        componentType: componentType as any,
+        data: data as any,
         colorTheme: resolvedTheme || "dark",
         screenSize: "md",
         themeComponentAddress: componentConfigContext.componentConfig.theme,

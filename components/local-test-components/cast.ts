@@ -1,6 +1,6 @@
 import { Address } from "viem";
 
-import { CastProps } from "../../lib/types";
+import { CastProps, EmbeddedCast } from "../../lib/types";
 import { COMMON_STYLES } from "./common";
 import { COMMENT_ICON, HEART_ICON, REPEAT_ICON, SHARE_ICON } from "./icons";
 
@@ -160,21 +160,21 @@ export const LOCAL_TEST_COMPONENT_INNER_CAST = (
 };
 
 const LOCAL_TEST_COMPONENT_EMBED_CAST = (
-  cast: CastProps,
+  cast: EmbeddedCast,
   colorTheme: string,
   screenSize: string
 ): string => {
-  let embed = "";
-  if (cast.embeds.length > 0) {
-    const firstEmbed = cast.embeds[0];
-    if ("cast" in firstEmbed) {
-      embed = LOCAL_TEST_COMPONENT_EMBED_CAST(
-        firstEmbed.cast,
-        colorTheme,
-        screenSize
-      );
-    }
-  }
+  // let embed = "";
+  // if (cast.embeds.length > 0) {
+  //   const firstEmbed = cast.embeds[0];
+  //   if ("cast" in firstEmbed) {
+  //     embed = LOCAL_TEST_COMPONENT_EMBED_CAST(
+  //       firstEmbed.cast,
+  //       colorTheme,
+  //       screenSize
+  //     );
+  //   }
+  // }
 
   return `
         <div class="p-3 mt-2 border border-muted-foreground rounded-md">
@@ -189,7 +189,6 @@ const LOCAL_TEST_COMPONENT_EMBED_CAST = (
             <p class="text-muted-foreground">@${cast.author.username} • ${cast.timeDelta}</p>
           </div>
           <p class="whitespace-pre-wrap break-words pt-[2px]">${cast.text}</p>
-          ${embed}
         </div>
         `;
 };

@@ -25,7 +25,23 @@ export interface CastProps {
   embeds: CastEmbed[];
 }
 
-export type CastEmbed = { cast: CastProps } | { embedUrl: string };
+export type CastEmbed = { cast: EmbeddedCast } | { embedUrl: string };
+
+export interface EmbeddedCast {
+  hash: string;
+  timeDelta: string;
+  text: string;
+  recastsCount: number;
+  likesCount: number;
+  repliesCount: number;
+  author: {
+    fid: number;
+    username: string;
+    displayName: string;
+    pfpUrl: string;
+  };
+  channel?: { name: string; imageUrl: string };
+}
 
 export type OnChainComponentProps =
   | {

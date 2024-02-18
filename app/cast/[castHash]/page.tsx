@@ -18,7 +18,7 @@ export default async function CastPage({
       <OnChainComponent
         componentType="cast"
         data={cast}
-        iframeClassName="w-full h-[300px]"
+        iframeClassName="w-full h-[500px] mt-6"
       />
       {/* <OnChainComponent
         componentType="feed"

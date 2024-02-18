@@ -144,7 +144,7 @@ export const LOCAL_TEST_COMPONENT_INNER_CAST = (
       </a>
 
       <a href="/cast/${cast.hash}" target="_top">
-        <p class="whitespace-pre-wrap break-words pt-[2px]">${cast.text}</p>
+        <p class="whitespace-pre-wrap break-words pt-[2px]">LOCAL TEST - ${cast.text}</p>
       </a>
       ${embed}
       ${channel}

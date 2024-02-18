@@ -4,68 +4,12 @@ import { LOCAL_TEST_COMPONENT_CAST } from "../components/local-test-components/c
 import { LOCAL_TEST_COMPONENT_FEED } from "../components/local-test-components/feed";
 import { LOCAL_TEST_THEME } from "../components/local-test-components/theme";
 import { LOCAL_TEST_COMPONENT_USER_SUMMARY } from "../components/local-test-components/user-summary";
+import { CAST_ABI, THEME_ABI, USER_SUMMARY_ABI } from "./abi";
 import { Chain } from "./chains";
 import { OnChainComponentProps } from "./types";
 import { getPublicClient } from "./viem";
 
 const chain: Chain = "BASE_SEPOLIA";
-
-const USER_SUMMARY_ABI = [
-  {
-    inputs: [
-      {
-        components: [
-          { internalType: "string", name: "fid", type: "string" },
-          { internalType: "string", name: "username", type: "string" },
-          { internalType: "string", name: "displayName", type: "string" },
-          {
-            components: [
-              { internalType: "string", name: "url", type: "string" },
-            ],
-            internalType: "struct UserSummaryComponent.Pfp",
-            name: "pfp",
-            type: "tuple",
-          },
-          {
-            components: [
-              {
-                components: [
-                  { internalType: "string", name: "text", type: "string" },
-                ],
-                internalType: "struct UserSummaryComponent.Bio",
-                name: "bio",
-                type: "tuple",
-              },
-            ],
-            internalType: "struct UserSummaryComponent.Profile",
-            name: "profile",
-            type: "tuple",
-          },
-          { internalType: "uint64", name: "followingCount", type: "uint64" },
-          { internalType: "uint64", name: "followerCount", type: "uint64" },
-        ],
-        internalType: "struct UserSummaryComponent.UserSummary",
-        name: "userSummary",
-        type: "tuple",
-      },
-      {
-        internalType: "enum CommonStyles.ColorTheme",
-        name: "colorTheme",
-        type: "uint8",
-      },
-      {
-        internalType: "enum CommonStyles.ScreenSize",
-        name: "screenSize",
-        type: "uint8",
-      },
-      { internalType: "address", name: "themeComponent", type: "address" },
-    ],
-    name: "getComponent",
-    outputs: [{ internalType: "string", name: "", type: "string" }],
-    stateMutability: "view",
-    type: "function",
-  },
-] as const;
 
 export async function fetchComponent({
   address,
@@ -130,28 +74,86 @@ export async function fetchComponent({
         themeComponentAddress
       );
     }
-    return "Cast component not implemented";
+
+    return await publicClient.readContract({
+      address: address,
+      abi: CAST_ABI,
+      functionName: "getComponent",
+      args: [
+        {
+          hash: data.hash,
+          timeDelta: data.timeDelta,
+          text: data.text,
+          recastsCount: BigInt(data.recastsCount),
+          likesCount: BigInt(data.likesCount),
+          repliesCount: BigInt(data.repliesCount),
+          author: {
+            fid: data.author.fid.toString(),
+            username: data.author.username,
+            displayName: data.author.displayName,
+            pfpUrl: data.author.pfpUrl,
+          },
+          isInChannel: !!data.channel,
+          channel: {
+            name: data.channel?.name || "",
+            imageUrl: data.channel?.imageUrl || "",
+          },
+          embeds: data.embeds.map((embed) => ({
+            isCast: "cast" in embed,
+            cast:
+              "cast" in embed
+                ? {
+                    hash: embed.cast.hash,
+                    timeDelta: embed.cast.timeDelta,
+                    text: embed.cast.text,
+                    recastsCount: BigInt(embed.cast.recastsCount),
+                    likesCount: BigInt(embed.cast.likesCount),
+                    repliesCount: BigInt(embed.cast.repliesCount),
+                    author: {
+                      fid: embed.cast.author.fid.toString(),
+                      username: embed.cast.author.username,
+                      displayName: embed.cast.author.displayName,
+                      pfpUrl: embed.cast.author.pfpUrl,
+                    },
+                    isInChannel: !!embed.cast.channel,
+                    channel: embed.cast.channel
+                      ? {
+                          name: embed.cast.channel.name,
+                          imageUrl: embed.cast.channel.imageUrl,
+                        }
+                      : { name: "", imageUrl: "" },
+                  }
+                : {
+                    hash: "",
+                    timeDelta: "",
+                    text: "",
+                    recastsCount: BigInt(0),
+                    likesCount: BigInt(0),
+                    repliesCount: BigInt(0),
+                    author: {
+                      fid: "",
+                      username: "",
+                      displayName: "",
+                      pfpUrl: "",
+                    },
+                    isInChannel: false,
+                    channel: {
+                      name: "",
+                      imageUrl: "",
+                    },
+                  },
+            embedUrl: "embedUrl" in embed ? embed.embedUrl : "",
+          })),
+        },
+        colorTheme === "light" ? 0 : 1,
+        screenSize === "sm" ? 0 : 1,
+        themeComponentAddress,
+      ],
+    });
   } else {
     return "Unknown component type for default";
   }
 }
-
-const THEME_ABI = [
-  {
-    inputs: [
-      {
-        internalType: "enum DefaultTheme.ColorTheme",
-        name: "colorTheme",
-        type: "uint8",
-      },
-      { internalType: "enum DefaultTheme.ScreenSize", name: "", type: "uint8" },
-    ],
-    name: "getTheme",
-    outputs: [{ internalType: "string", name: "", type: "string" }],
-    stateMutability: "pure",
-    type: "function",
-  },
-] as const;
 
 export async function fetchTheme({
   address,

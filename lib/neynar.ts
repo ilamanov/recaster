@@ -128,7 +128,9 @@ async function convertCast(
     } else {
       const embeddedCast = (
         await client.lookUpCastByHashOrWarpcastUrl(
-          cast.embeds[0].cast_id.hash,
+          "cast_id" in cast.embeds[0]
+            ? cast.embeds[0].cast_id.hash
+            : (cast.embeds[0] as any).castId.hash,
           CastParamType.Hash
         )
       ).cast;

@@ -11,7 +11,7 @@ export const LOCAL_TEST_COMPONENT_CAST = async (
   themeComponentAddress: Address
 ) => {
   return `
-<body class="${colorTheme} md font-sans text-sm md:text-base antialiased w-full">
+<body class="${screenSize} font-sans text-sm md:text-base antialiased w-full">
   ${LOCAL_TEST_COMPONENT_INNER_CAST(cast, colorTheme, screenSize)}
 </body>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>

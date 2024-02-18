@@ -19,6 +19,9 @@ There are additional component already deployed to Base Sepolia which you can us
 
 - Neobrutalism theme: [0x23f943b9bf6b6f0791ca17126ff89c2968abd6a1](https://sepolia.basescan.org/address/0x23f943b9bf6b6f0791ca17126ff89c2968abd6a1#code)
 
+Here is what it looks like:
+![neobrutalism](assets/neobrutalism.png)
+
 You can add your own components too! **You can remix your Farcaster experience by deploying your own components and using them permissionlessly!**
 
 ## Why on-chain UI?

@@ -1,5 +1,7 @@
 Recaster is <i>remixable</i> Farcaster client. Recaster allows you to remix your Farcaster experience to your liking. It's available at [recaster.vercel.app](https://recaster.vercel.app/).
 
+Recaster does not render most of the UI itself. Instead it fetches the UI (HTML) from Base Sepolia. So anyone can contribute their own components and personalize/remix their Farcaster experience.
+
 ## How does it work?
 
 This repo is a simple Next.js wrapper around the core on-chain components. The core components of the Farcaster client like the rendering of casts, the feed, the user profile, etc happens on-chain (on Base Sepolia). The Next.js wrapper is rendered off-chain. The Next.js wrapper serves the HTML returned from the on-chain contracts in an iframe.

@@ -59,8 +59,8 @@ export function SignIn() {
 
   return (
     <ThirdwebProvider
-      activeChain="mumbai"
-      clientId="YOUR_CLIENT_ID"
+      activeChain="base-sepolia"
+      clientId={process.env.NEXT_PUBLIC_THIRDWEB_CLIENT_ID}
       supportedWallets={[
         metamaskWallet(),
         coinbaseWallet({ recommended: true }),

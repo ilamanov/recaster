@@ -22,7 +22,7 @@ export default async function HomePage({}: {}) {
         <p className="py-2 text-lg">
           Recaster is <i>remixable</i> Farcaster client. Recaster allows you to
           remix your Farcaster experience to your liking. Simply change the
-          on-chain component config on the right to change the appearance of
+          on-chain component config on the top right to change the appearance of
           your feed. You can write your own components and use them too. Head
           over to{" "}
           <Link

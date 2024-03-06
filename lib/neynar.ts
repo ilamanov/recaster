@@ -28,6 +28,7 @@ export async function getUser(
     return {
       pfp: { url: user.pfp.url },
       username: user.username,
+      custodyAddress: user.custodyAddress,
       displayName: user.displayName,
       fid: user.fid,
       profile: { bio: { text: user.profile.bio.text } },

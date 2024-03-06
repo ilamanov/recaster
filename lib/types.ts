@@ -1,6 +1,7 @@
 export type UserSummaryProps = {
   pfp: { url: string };
   username: string;
+  custodyAddress: string;
   displayName: string;
   fid: number;
   profile: { bio: { text: string } };

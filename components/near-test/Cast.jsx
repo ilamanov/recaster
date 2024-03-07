@@ -138,15 +138,15 @@ const DivWithColors = styled.div`
 `;
 
 const embeds = cast.embeds.map(embed => {
-  if ("cast" in firstEmbed) {
+  if ("cast" in embed) {
     return (
-        <PrettyLink href={`/cast/${firstEmbed.cast.hash}`} target="_top">
-          <Widget src={"recaster.testnet/widget/EmbeddedCast"} props={firstEmbed.cast} />
+        <PrettyLink href={`/cast/${embed.cast.hash}`} target="_top">
+          <Widget src={"recaster.testnet/widget/EmbeddedCast"} props={embed.cast} />
         </PrettyLink>
     )
   } 
-  else if ("embedUrl" in firstEmbed) {
-    const embedUrl = firstEmbed.embedUrl;
+  else if ("embedUrl" in embed) {
+    const embedUrl = embed.embedUrl;
     if (embedUrl.startsWith("https://stream") && embedUrl.endsWith(".m3u8")) {
       return <video data-src={embedUrl} controls className="rc-video-player mt-2" style={{maxHeight: 300}}></video>;
     } else if (

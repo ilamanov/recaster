@@ -95,7 +95,7 @@ if (userSummary.mutualFollows.length > 3) {
 
 return (
   <DivWithColors
-    className="p-3 rounded-2 m-2"
+    className="p-3 rounded-2"
     style={{
       borderWidth: 1,
       boxShadow: "var(--box-shadow-md)"

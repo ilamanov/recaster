@@ -8,6 +8,7 @@ import "/styles/code/line-numbers-prism.css";
 import "/styles/code/prism-theme-vsc-plus.css";
 
 import Link from "next/link";
+import Script from "next/script";
 import { Home, Repeat2, Search } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -60,7 +61,12 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning // https://github.com/pacocoursey/next-themes#with-app
     >
-      <head></head>
+      <head>
+        <Script
+          src="https://cdn.jsdelivr.net/npm/hls.js@latest"
+          strategy="afterInteractive"
+        />
+      </head>
       <body
         className={`font-sans text-sm md:text-base ${fontMono.variable} antialiased`}
       >
@@ -94,7 +100,7 @@ export default function RootLayout({
               <div className="hidden lg:block lg:col-span-1">
                 <LeftColumn />
               </div>
-              <div className="col-start-1 col-span-5 mx-5 lg:mx-0 lg:col-start-2 lg:col-span-3">
+              <div className="pt-4 col-start-1 col-span-5 mx-5 lg:mx-0 lg:col-start-2 lg:col-span-3">
                 {children}
               </div>
               <div className="hidden lg:block lg:col-span-1">

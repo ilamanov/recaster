@@ -11,7 +11,7 @@ export type UserSummaryProps = {
 
 export interface CastProps {
   hash: string;
-  timeDelta: string;
+  timestamp: string;
   text: string;
   recastsCount: number;
   likesCount: number;
@@ -30,7 +30,7 @@ export type CastEmbed = { cast: EmbeddedCast } | { embedUrl: string };
 
 export interface EmbeddedCast {
   hash: string;
-  timeDelta: string;
+  timestamp: string;
   text: string;
   recastsCount: number;
   likesCount: number;

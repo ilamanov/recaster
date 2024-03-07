@@ -125,6 +125,8 @@ async function convertCast(
           )
         ).cast;
         embeds.push({ cast: await convertCast(embeddedCast) });
+      } else {
+        embeds.push({ embedUrl });
       }
     } else {
       const embeddedCast = (
@@ -141,7 +143,7 @@ async function convertCast(
 
   return {
     hash: cast.hash,
-    timeDelta: getTimeDelta(cast.timestamp),
+    timestamp: cast.timestamp,
     text: cast.text,
     recastsCount:
       "recasts" in cast ? cast.recasts.count : cast.reactions.recasts.length,
@@ -170,48 +172,4 @@ export async function getFeed(
     console.error("Error fetching feed", e);
     return null;
   }
-}
-
-function getTimeDelta(timestamp: string) {
-  const timeElapsed = getTimeElapsed(timestamp);
-
-  if (timeElapsed.days > 0) {
-    return `${timeElapsed.days}d`;
-  } else if (timeElapsed.hours > 0) {
-    return `${timeElapsed.hours}h`;
-  } else if (timeElapsed.minutes > 0) {
-    return `${timeElapsed.minutes}m`;
-  } else {
-    return `${timeElapsed.seconds}s`;
-  }
-}
-
-function getTimeElapsed(timestamp: string) {
-  // Parse the given timestamp
-  const pastDate = new Date(timestamp);
-
-  // Get current date
-  const currentDate = new Date();
-
-  // Calculate difference in milliseconds
-  let diff = currentDate.getTime() - pastDate.getTime();
-
-  // Convert difference to a more readable format
-  const seconds = Math.floor(diff / 1000); // Convert milliseconds to seconds
-  const minutes = Math.floor(seconds / 60); // Convert seconds to minutes
-  const hours = Math.floor(minutes / 60); // Convert minutes to hours
-  const days = Math.floor(hours / 24); // Convert hours to days
-
-  // Update diff to represent the remainder for the next largest unit
-  diff -= days * 24 * 60 * 60 * 1000;
-  diff -= (hours % 24) * 60 * 60 * 1000;
-  diff -= (minutes % 60) * 60 * 1000;
-  const remainingSeconds = Math.floor(diff / 1000);
-
-  return {
-    days,
-    hours: hours % 24,
-    minutes: minutes % 60,
-    seconds: remainingSeconds,
-  };
 }

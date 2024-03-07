@@ -71,16 +71,6 @@ function Inner({
 
           let errors = false;
 
-          if (!isAddress(userSummary)) {
-            setUserSummaryError("Invalid address");
-            errors = true;
-          }
-
-          if (!isAddress(feed)) {
-            setFeedError("Invalid address");
-            errors = true;
-          }
-
           if (!isAddress(cast)) {
             setCastError("Invalid address");
             errors = true;
@@ -97,8 +87,8 @@ function Inner({
 
           setComponentConfig({
             ...componentConfig,
-            userSummary: userSummary as Address,
-            feed: feed as Address,
+            userSummary: userSummary,
+            feed: feed,
             cast: cast as Address,
             theme: theme as Address,
           });

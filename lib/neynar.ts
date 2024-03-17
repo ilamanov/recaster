@@ -115,8 +115,10 @@ async function convertCast(
 
   const embeds: CastEmbed[] = [];
   if (cast.embeds.length > 0) {
-    if ("url" in cast.embeds[0]) {
-      const embedUrl = cast.embeds[0].url;
+  }
+  for (const embed of cast.embeds) {
+    if ("url" in embed) {
+      const embedUrl = embed.url;
       if (isEmbedACast(embedUrl)) {
         const embeddedCast = (
           await client.lookUpCastByHashOrWarpcastUrl(
@@ -131,9 +133,7 @@ async function convertCast(
     } else {
       const embeddedCast = (
         await client.lookUpCastByHashOrWarpcastUrl(
-          "cast_id" in cast.embeds[0]
-            ? cast.embeds[0].cast_id.hash
-            : (cast.embeds[0] as any).castId.hash,
+          "cast_id" in embed ? embed.cast_id.hash : (embed as any).castId.hash,
           CastParamType.Hash
         )
       ).cast;

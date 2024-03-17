@@ -4,6 +4,7 @@ import { useContext, useEffect } from "react";
 import dynamic from "next/dynamic";
 
 import { CastProps, UserSummaryProps } from "@/lib/types";
+import { useClientUser } from "@/hooks/client-user-data";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ComponentConfigContext } from "@/components/contexts/component-config";
 import { OnChainComponent } from "@/components/on-chain-component";
@@ -21,6 +22,9 @@ export function UserPage({
   user: UserSummaryProps;
   feed: CastProps[];
 }) {
+  const { user: clientUser } = useClientUser();
+  use this to fetch mutual follows
+
   const castsOnly = feed.filter((cast) => cast.author.fid === user.fid);
 
   const componentConfigContext = useContext(ComponentConfigContext);
@@ -28,6 +32,8 @@ export function UserPage({
   if (componentConfigContext === null) {
     throw new Error("ComponentConfigContext is null");
   }
+
+  console.log("cast", castsOnly);
 
   const componentConfig = componentConfigContext.componentConfig;
 
@@ -63,7 +69,6 @@ export function UserPage({
           src={componentConfig.userSummary}
           props={{
             ...user,
-            mutualFollows: [],
             appUrl: "https://recaster.vercel.app",
             onFollow: () => {
               console.log("followed");

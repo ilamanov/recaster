@@ -73,16 +73,16 @@ return (
       borderColor: "hsl(var(--muted-foreground))",
     }}
   >
-    <div class="d-flex gap-2 align-items-end">
+    <div className="d-flex gap-2 align-items-end">
       <img
-          class="rounded-circle"
+          className="rounded-circle"
           src={author.pfpUrl}
           style={{ height: 25, width: 25 }}
           alt={`${author.username} profile picture`}
       />
-      <div class="fs-6 fw-bold" style={{margin: 0}}>{author.displayName}</div>
+      <div className="fs-6 fw-bold" style={{margin: 0}}>{author.displayName}</div>
       <div style={{color: "hsl(var(--muted-foreground))", margin: 0}} >@{author.username} • {getTimeDelta(cast.timestamp)}</div>
     </div>
-    <p class="text-break pt-1" style={{whiteSpace: "pre-wrap"}}>{cast.text}</p>
+    <p className="text-break pt-1" style={{whiteSpace: "pre-wrap"}}>{cast.text}</p>
   </DivWithColors>
 );

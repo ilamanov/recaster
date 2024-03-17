@@ -20,11 +20,11 @@ export default async function HomePage({}: {}) {
           Welcome to Recaster!
         </h3>
         <p className="py-2 text-lg">
-          Recaster is <i>remixable</i> Farcaster client. Recaster allows you to
-          remix your Farcaster experience to your liking. Simply change the
-          on-chain component config on the top right to change the appearance of
-          your feed. You can write your own components and use them too. Head
-          over to{" "}
+          Recaster is an on-chain <i>remixable</i> Farcaster client. Recaster
+          allows you to remix your Farcaster experience to your liking. Simply
+          change the on-chain component config on the top right to change the
+          appearance of your feed. You can write your own components and use
+          them too. Head over to{" "}
           <Link
             className="underline"
             href="https://github.com/ilamanov/recaster"

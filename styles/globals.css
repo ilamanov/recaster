@@ -114,4 +114,14 @@
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+
+  .neynar_signin button {
+    border: 1px solid var(--bs-border-color);
+
+    &:hover {
+      background-color: hsl(var(--primary)) !important;
+      color: hsl(var(--primary-foreground)) !important;
+      border-color: hsl(var(--primary)) !important;
+    }
+  }
 }

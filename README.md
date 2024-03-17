@@ -1,4 +1,4 @@
-Recaster is <i>remixable</i> Farcaster client. Recaster allows you to remix your Farcaster experience to your liking. It's available at [recaster.vercel.app](https://recaster.vercel.app/).
+Recaster is an on-chain <i>remixable</i> Farcaster client. Recaster allows you to remix your Farcaster experience to your liking. It's available at [recaster.vercel.app](https://recaster.vercel.app/).
 
 Recaster does not render most of the UI itself. Instead it fetches the UI (HTML) from Base Sepolia. So anyone can contribute their own components and personalize/remix their Farcaster experience.
 

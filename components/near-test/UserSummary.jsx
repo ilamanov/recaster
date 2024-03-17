@@ -1,48 +1,35 @@
-// type UserSummaryProps = {
-//     pfp: { url: string };
-//     username: string;
-//     displayName: string;
-//     fid: number;
-//     profile: { bio: { text: string } };
-//     followingCount: number;
-//     followerCount: number;
-//   };
+const fakeProps = {
+    pfp: { url: "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_256/https://lh3.googleusercontent.com/MyUBL0xHzMeBu7DXQAqv0bM9y6s4i4qjnhcXz5fxZKS3gwWgtamxxmxzCJX7m2cuYeGalyseCA2Y6OBKDMR06TWg2uwknnhdkDA1AA" },
+    username: "dwr.eth",
+    custodyAddress: "0x1234567890",
+    displayName: "Dan Romero",
+    fid: 3,
+    profile: { bio: { text: "Working on Farcaster and Warpcast." } },
+    followingCount: 2500,
+    followerCount: 149440,
+    mutualFollows: [
+      {
+        pfp: { url: "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_256/https://lh3.googleusercontent.com/MyUBL0xHzMeBu7DXQAqv0bM9y6s4i4qjnhcXz5fxZKS3gwWgtamxxmxzCJX7m2cuYeGalyseCA2Y6OBKDMR06TWg2uwknnhdkDA1AA" },
+        username: "dwr.eth",
+        displayName: "Dan Romero",
+        fid: 3,
+        profile: { bio: { text: "Working on Farcaster and Warpcast." } },
+        followingCount: 2500,
+        followerCount: 149440,
+      },
+      {
+        pfp: { url: "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_256/https://lh3.googleusercontent.com/MyUBL0xHzMeBu7DXQAqv0bM9y6s4i4qjnhcXz5fxZKS3gwWgtamxxmxzCJX7m2cuYeGalyseCA2Y6OBKDMR06TWg2uwknnhdkDA1AA" },
+        username: "dwr.eth",
+        displayName: "Dan Romero",
+        fid: 3,
+        profile: { bio: { text: "Working on Farcaster and Warpcast." } },
+        followingCount: 2500,
+        followerCount: 149440,
+      }
+    ]
+}
 
-
-// const fakeProps = {
-//     pfp: { url: "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_256/https://lh3.googleusercontent.com/MyUBL0xHzMeBu7DXQAqv0bM9y6s4i4qjnhcXz5fxZKS3gwWgtamxxmxzCJX7m2cuYeGalyseCA2Y6OBKDMR06TWg2uwknnhdkDA1AA" },
-//     username: "dwr.eth",
-//     custodyAddress: "0x1234567890",
-//     displayName: "Dan Romero",
-//     fid: 3,
-//     profile: { bio: { text: "Working on Farcaster and Warpcast." } },
-//     followingCount: 2500,
-//     followerCount: 149440,
-//     mutualFollows: [
-//       {
-//         pfp: { url: "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_256/https://lh3.googleusercontent.com/MyUBL0xHzMeBu7DXQAqv0bM9y6s4i4qjnhcXz5fxZKS3gwWgtamxxmxzCJX7m2cuYeGalyseCA2Y6OBKDMR06TWg2uwknnhdkDA1AA" },
-//         username: "dwr.eth",
-//         displayName: "Dan Romero",
-//         fid: 3,
-//         profile: { bio: { text: "Working on Farcaster and Warpcast." } },
-//         followingCount: 2500,
-//         followerCount: 149440,
-//       },
-//       {
-//         pfp: { url: "https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_256/https://lh3.googleusercontent.com/MyUBL0xHzMeBu7DXQAqv0bM9y6s4i4qjnhcXz5fxZKS3gwWgtamxxmxzCJX7m2cuYeGalyseCA2Y6OBKDMR06TWg2uwknnhdkDA1AA" },
-//         username: "dwr.eth",
-//         displayName: "Dan Romero",
-//         fid: 3,
-//         profile: { bio: { text: "Working on Farcaster and Warpcast." } },
-//         followingCount: 2500,
-//         followerCount: 149440,
-//       }
-//     ]
-// }
-
-// const userSummary = Object.keys(props).length > 0 ? props : fakeProps;
-// const userSummary = fakeProps;
-const userSummary = props
+const userSummary = "pfp" in props ? props : fakeProps;
 
 const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
 
@@ -85,12 +72,15 @@ const DivWithColors = styled.div`
   color: hsl(var(--user-summary-foreground, var(--foreground)));
 `;
 
-let mutualFollowsString = `Followed by${userSummary.mutualFollows.slice(0, 3).map((user, index) => (
-  ` @${user.username}`
-)).join(",")}`
+let mutualFollowsString;
+if (userSummary.mutualFollows !== undefined) {
+  mutualFollowsString = `Followed by${userSummary.mutualFollows.slice(0, 3).map((user, index) => (
+    ` @${user.username}`
+  )).join(",")}`
 
-if (userSummary.mutualFollows.length > 3) {
-  mutualFollowsString += ` and ${userSummary.mutualFollows.length - 3} more you know`
+  if (userSummary.mutualFollows.length > 3) {
+    mutualFollowsString += ` and ${userSummary.mutualFollows.length - 3} more you know`
+  }
 }
 
 return (
@@ -118,7 +108,7 @@ return (
             <div>
               <h3 className="mb-0 fs-6 fw-bold">{userSummary.displayName}</h3>
               <div style={{color: "hsl(var(--muted-foreground))"}}>
-                @{userSummary.username} fid: {userSummary.fid}
+                @{userSummary.username} <span className="ms-2">fid: {userSummary.fid}</span>
               </div>
             </div>
             <p className="mb-0">{userSummary.profile.bio.text}</p>
@@ -185,27 +175,29 @@ return (
           </div>
         </div>
         <div className="mt-3">
-          {userSummary.mutualFollows.length === 0 ? <div style={{color: "hsl(var(--muted-foreground))"}}>Not followed by anyone you know</div> : (
-            <a href={`/${userSummary.username}/mutual-followers`} target="_top" style={{color: "hsl(var(--muted-foreground))"}}>
-              <div className="d-flex gap-2 align-items-center">
-                <div className="d-flex" style={{gap: 2}}>
-                  {userSummary.mutualFollows.slice(0, 3).map((user, index) => (
-                    <img
-                      key={index}
-                      className="rounded-circle"
-                      src={user.pfp.url}
-                      width="30"
-                      height="30"
-                      style={{height: 30, width: 30}}
-                      alt={`${user.username} profile picture`}
-                    />
-                  ))}
+          {userSummary.mutualFollows !== undefined && (
+            userSummary.mutualFollows.length === 0 ? <div style={{color: "hsl(var(--muted-foreground))"}}>Not followed by anyone you know</div> : (
+              <a href={`/${userSummary.username}/mutual-followers`} target="_top" style={{color: "hsl(var(--muted-foreground))"}}>
+                <div className="d-flex gap-2 align-items-center">
+                  <div className="d-flex" style={{gap: 2}}>
+                    {userSummary.mutualFollows.slice(0, 3).map((user, index) => (
+                      <img
+                        key={index}
+                        className="rounded-circle"
+                        src={user.pfp.url}
+                        width="30"
+                        height="30"
+                        style={{height: 30, width: 30}}
+                        alt={`${user.username} profile picture`}
+                      />
+                    ))}
+                  </div>
+                  <div>
+                    {mutualFollowsString}
+                  </div>
                 </div>
-                <div>
-                  {mutualFollowsString}
-                </div>
-              </div>
-            </a>
+              </a>
+            )
           )}
         </div>
       </div>

@@ -62,10 +62,10 @@ export default function RootLayout({
       suppressHydrationWarning // https://github.com/pacocoursey/next-themes#with-app
     >
       <head>
-        <Script
+        {/* <Script
           src="https://cdn.jsdelivr.net/npm/hls.js@latest"
           strategy="afterInteractive"
-        />
+        /> */}
       </head>
       <body
         className={`font-sans text-sm md:text-base ${fontMono.variable} antialiased`}

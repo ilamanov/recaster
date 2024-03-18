@@ -45,6 +45,7 @@ export function useClientUser() {
   }, [authData?.fid]);
 
   return {
+    authData,
     user,
     checkAuth,
   };

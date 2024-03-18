@@ -1,7 +1,8 @@
 const fakeProps = {
   hash: "0x9f979be8e1b6d5e6cd6cbfda8c742a108e9d8007",
   timestamp: "2024-03-06T03:48:05.000Z",
-  text: "Voted yes for this one. Nouns builders have the potential to do something special here.",
+  // text: "Voted yes for this one. Nouns builders have the potential to do something special here.",
+  text: "Cool new game frame from @tldr for March Madness",
   author: {
       username: "seneca",
       displayName: "seneca",
@@ -137,26 +138,42 @@ const DivWithColors = styled.div`
   color: hsl(var(--cast-foreground, var(--foreground)));
 `;
 
+const renderWord = (word) => {
+  if (word.startsWith('@')) {
+    const username = word.substring(1); // Remove the '@' symbol
+    return <a href={`/${username}`} style={{color: "hsl(var(--primary))"}}>{word}</a>;
+  }
+  return word;
+};
+
+const richText = [];
+cast.text.split(' ').forEach((word, index) => {
+  richText.push(renderWord(word));
+  richText.push(' '); // Add space back in since we split by spaces
+});
+
 const embeds = cast.embeds.map(embed => {
   if ("cast" in embed) {
     return (
-        <PrettyLink href={`/cast/${embed.cast.hash}`} target="_top">
-          <Widget src={"recaster.testnet/widget/EmbeddedCast"} props={embed.cast} />
-        </PrettyLink>
+      <PrettyLink href={`/cast/${embed.cast.hash}`} target="_top">
+        <Widget src={"recaster.testnet/widget/EmbeddedCast"} props={embed.cast} />
+      </PrettyLink>
     )
   } 
   else if ("embedUrl" in embed) {
     const embedUrl = embed.embedUrl;
     if (embedUrl.startsWith("https://stream") && embedUrl.endsWith(".m3u8")) {
-      return <video data-src={embedUrl} controls className="rc-video-player mt-2" style={{maxHeight: 300}}></video>;
+      // return <video data-src={embedUrl} controls className="rc-video-player mt-2" style={{maxHeight: 300}}></video>;
+      return <div className="fst-italic" style={{color: "hsl(var(--muted-foreground))"}}>[Videos will be supported soon]</div>;
     } else if (
       embedUrl.startsWith("https://i.imgur.com/") &&
       (embedUrl.endsWith(".png") || embedUrl.endsWith(".jpg"))
     ) {
       return <img src={embedUrl} alt="Embedded Image" className="mt-2" style={{maxHeight: 300}} />;
     }
+    return <div className="fst-italic" style={{color: "hsl(var(--muted-foreground))"}}>[Unsupported embed: {embedUrl}]</div>
   }
-  return "unsupported embed"
+  return <div className="fst-italic" style={{color: "hsl(var(--muted-foreground))"}}>[Unsupported embed: {JSON.stringify(embed)}]</div>
 });
 
 let channel;
@@ -215,7 +232,7 @@ return (
       </a>
 
       <PrettyLink href={`/cast/${cast.hash}`} target="_top">
-        <p className="text-break mb-1" style={{whiteSpace: "pre-wrap"}}>{cast.text}</p>
+        <p className="text-break mb-1" style={{whiteSpace: "pre-wrap"}}>{richText}</p>
       </PrettyLink>
       {embeds}
       {channel}

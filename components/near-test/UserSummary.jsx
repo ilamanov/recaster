@@ -4,6 +4,7 @@ const fakeProps = {
     custodyAddress: "0x1234567890",
     displayName: "Dan Romero",
     fid: 3,
+    isFollowing: false,
     profile: { bio: { text: "Working on Farcaster and Warpcast." } },
     followingCount: 2500,
     followerCount: 149440,
@@ -134,13 +135,13 @@ return (
                 boxShadow: "var(--box-shadow-sm)"
               }}
               onClick={() => {
-                const callback = props.onFollow;
+                const callback = props.isFollowing ? props.onUnfollow : props.onFollow;
                 if (callback) {
                   callback();
                 }
               }}
             >
-              Follow
+              {props.isFollowing ? "Unfollow" : "Follow"}
             </button>
             <Popover.Root>
               <Popover.Trigger asChild>

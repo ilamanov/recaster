@@ -3,7 +3,7 @@ import { FilterType } from "@neynar/nodejs-sdk";
 import { getFeed, getUser } from "@/lib/neynar";
 import { ErrorMessage } from "@/components/ui/error-message";
 
-import { UserPage } from "./UserPage";
+import { UserPage } from "./user-page";
 
 export default async function UserServerPage({
   params,

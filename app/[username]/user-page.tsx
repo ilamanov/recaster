@@ -1,8 +1,10 @@
 "use client";
 
-import { useContext, useEffect } from "react";
+import { useContext, useState } from "react";
 import dynamic from "next/dynamic";
+import { BulkFollowResponse } from "@neynar/nodejs-sdk/build/neynar-api/v2";
 
+import { AuthData } from "@/lib/neynar";
 import { CastProps, UserSummaryProps } from "@/lib/types";
 import { useClientUser } from "@/hooks/client-user-data";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -13,7 +15,38 @@ const Component = dynamic(() => import("@/components/near/component"), {
   ssr: false,
 });
 
-declare const Hls: any | undefined;
+// declare const Hls: any | undefined;
+
+async function followOrUnfollowUser(
+  authData: AuthData | null,
+  fid: number,
+  follow: boolean
+) {
+  const signerUuid = authData?.signer_uuid;
+  if (!signerUuid) {
+    console.log("You need to sign in first.");
+    return false;
+  }
+
+  const rest = await fetch(follow ? "/api/follow-user" : "/api/unfollow-user", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      signerUuid,
+      fid,
+    }),
+  });
+  const result: BulkFollowResponse = await rest.json();
+
+  if (!result.success || !result.details[0].success) {
+    console.error(follow ? "Error following user" : "Error unfollowing user");
+    return false;
+  }
+
+  return true;
+}
 
 export function UserPage({
   user,
@@ -22,8 +55,9 @@ export function UserPage({
   user: UserSummaryProps;
   feed: CastProps[];
 }) {
-  const { user: clientUser } = useClientUser();
-  use this to fetch mutual follows
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  const { authData } = useClientUser();
 
   const castsOnly = feed.filter((cast) => cast.author.fid === user.fid);
 
@@ -33,34 +67,32 @@ export function UserPage({
     throw new Error("ComponentConfigContext is null");
   }
 
-  console.log("cast", castsOnly);
-
   const componentConfig = componentConfigContext.componentConfig;
 
-  function initializeHLS(videoElement: HTMLVideoElement) {
-    var videoSrc = videoElement.getAttribute("data-src");
-    if (Hls.isSupported()) {
-      var hls = new Hls();
-      hls.loadSource(videoSrc);
-      hls.attachMedia(videoElement);
-      hls.on(Hls.Events.MANIFEST_PARSED, function () {
-        // videoElement.play();
-      });
-    } else if (
-      videoElement.canPlayType("application/vnd.apple.mpegurl") &&
-      videoSrc
-    ) {
-      videoElement.src = videoSrc;
-      videoElement.addEventListener("loadedmetadata", function () {
-        // videoElement.play();
-      });
-    }
-  }
+  // function initializeHLS(videoElement: HTMLVideoElement) {
+  //   var videoSrc = videoElement.getAttribute("data-src");
+  //   if (Hls.isSupported()) {
+  //     var hls = new Hls();
+  //     hls.loadSource(videoSrc);
+  //     hls.attachMedia(videoElement);
+  //     hls.on(Hls.Events.MANIFEST_PARSED, function () {
+  //       // videoElement.play();
+  //     });
+  //   } else if (
+  //     videoElement.canPlayType("application/vnd.apple.mpegurl") &&
+  //     videoSrc
+  //   ) {
+  //     videoElement.src = videoSrc;
+  //     videoElement.addEventListener("loadedmetadata", function () {
+  //       // videoElement.play();
+  //     });
+  //   }
+  // }
 
-  useEffect(() => {
-    var videoPlayers = document.querySelectorAll(".rc-video-player");
-    videoPlayers.forEach((p) => initializeHLS(p as HTMLVideoElement));
-  }, []);
+  // useEffect(() => {
+  //   var videoPlayers = document.querySelectorAll(".rc-video-player");
+  //   videoPlayers.forEach((p) => initializeHLS(p as HTMLVideoElement));
+  // }, []);
 
   return (
     <>
@@ -70,8 +102,20 @@ export function UserPage({
           props={{
             ...user,
             appUrl: "https://recaster.vercel.app",
+            isFollowing,
             onFollow: () => {
-              console.log("followed");
+              followOrUnfollowUser(authData, user.fid, true).then((result) => {
+                if (result) {
+                  setIsFollowing(true);
+                }
+              });
+            },
+            onUnfollow: () => {
+              followOrUnfollowUser(authData, user.fid, false).then((result) => {
+                if (result) {
+                  setIsFollowing(false);
+                }
+              });
             },
           }}
         />

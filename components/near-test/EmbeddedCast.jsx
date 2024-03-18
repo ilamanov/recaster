@@ -7,6 +7,11 @@ const fakeProps = {
       displayName: "seneca",
       pfpUrl: "https://i.imgur.com/RMv6RmZ.gif",
   },
+  embeds: [
+    {
+      embedUrl: "https://i.imgur.com/SBYFZBm.jpg"
+    }
+  ],
 }
 
 const cast = "hash" in props ? props : fakeProps;
@@ -70,7 +75,7 @@ return (
     className="p-2 rounded-2"
     style={{
       borderWidth: 1,
-      borderColor: "hsl(var(--muted-foreground))",
+      borderColor: "hsl(var(--muted))",
     }}
   >
     <div className="d-flex gap-2 align-items-end">

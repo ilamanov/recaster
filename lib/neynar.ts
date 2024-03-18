@@ -4,7 +4,10 @@ import {
   FilterType,
   NeynarAPIClient,
 } from "@neynar/nodejs-sdk";
-import { CastWithInteractions as CastWithInteractionsV1 } from "@neynar/nodejs-sdk/build/neynar-api/v1";
+import {
+  CastWithInteractions as CastWithInteractionsV1,
+  FollowResponseUser,
+} from "@neynar/nodejs-sdk/build/neynar-api/v1";
 import { CastWithInteractions as CastWithInteractionsV2 } from "@neynar/nodejs-sdk/build/neynar-api/v2";
 
 import { getPostedInChannel, isEmbedACast } from "./farcaster";
@@ -172,4 +175,19 @@ export async function getFeed(
     console.error("Error fetching feed", e);
     return null;
   }
+}
+
+export async function fetchAllFollowing(fid: number) {
+  let cursor: string | null = "";
+  let users: FollowResponseUser[] = [];
+  do {
+    const result = await client.fetchUserFollowing(fid, {
+      limit: 150,
+      cursor,
+    });
+    users = users.concat(result.result.users);
+    cursor = result.result.next.cursor;
+  } while (cursor !== "" && cursor !== null);
+
+  return users;
 }

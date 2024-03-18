@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import Link from "next/link";
 import Script from "next/script";
 // import {
@@ -16,8 +16,9 @@ import { User } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import { AuthData, NEYNAR_AUTH_DATA_LOCAL_STORAGE_KEY } from "@/lib/neynar";
-import { useClientUser } from "@/hooks/client-user-data";
 import { iconVariants } from "@/components/ui/icon";
+
+import { ClientUserContext } from "./contexts/client-user";
 
 declare global {
   interface Window {
@@ -26,7 +27,13 @@ declare global {
 }
 
 export function SignIn() {
-  const { user, checkAuth } = useClientUser();
+  const clientUserContext = useContext(ClientUserContext);
+
+  if (clientUserContext === null) {
+    throw new Error("ClientUserContext is null");
+  }
+
+  const { checkAuth, user } = clientUserContext;
 
   useEffect(() => {
     window.onSignInSuccess = (data: AuthData) => {

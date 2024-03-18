@@ -1,13 +1,13 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { BulkFollowResponse } from "@neynar/nodejs-sdk/build/neynar-api/v2";
 
 import { AuthData } from "@/lib/neynar";
 import { CastProps, UserSummaryProps } from "@/lib/types";
-import { useClientUser } from "@/hooks/client-user-data";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ClientUserContext } from "@/components/contexts/client-user";
 import { ComponentConfigContext } from "@/components/contexts/component-config";
 import { OnChainComponent } from "@/components/on-chain-component";
 
@@ -24,7 +24,7 @@ async function followOrUnfollowUser(
 ) {
   const signerUuid = authData?.signer_uuid;
   if (!signerUuid) {
-    console.log("You need to sign in first.");
+    console.error("You need to sign in first.");
     return false;
   }
 
@@ -57,17 +57,28 @@ export function UserPage({
 }) {
   const [isFollowing, setIsFollowing] = useState(false);
 
-  const { authData } = useClientUser();
-
-  const castsOnly = feed.filter((cast) => cast.author.fid === user.fid);
-
+  const clientUserContext = useContext(ClientUserContext);
   const componentConfigContext = useContext(ComponentConfigContext);
 
+  if (clientUserContext === null) {
+    throw new Error("ClientUserContext is null");
+  }
   if (componentConfigContext === null) {
     throw new Error("ComponentConfigContext is null");
   }
 
+  const { authData, followingUsers } = clientUserContext;
   const componentConfig = componentConfigContext.componentConfig;
+
+  const castsOnly = feed.filter((cast) => cast.author.fid === user.fid);
+
+  useEffect(() => {
+    if (!isFollowing && followingUsers) {
+      setIsFollowing(
+        followingUsers.some((followingUser) => followingUser.fid === user.fid)
+      );
+    }
+  }, [isFollowing, user.fid, followingUsers]);
 
   // function initializeHLS(videoElement: HTMLVideoElement) {
   //   var videoSrc = videoElement.getAttribute("data-src");

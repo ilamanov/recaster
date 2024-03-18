@@ -4,6 +4,7 @@ import React, { ReactNode, useEffect } from "react";
 import { ThemeProvider } from "next-themes";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ClientUserProvider } from "@/components/contexts/client-user";
 import { ComponentConfigProvider } from "@/components/contexts/component-config";
 
 import { OnChainThemeProvider } from "./on-chain-theme-provider";
@@ -40,7 +41,9 @@ export function Providers({ children }: { children: ReactNode }) {
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <TooltipProvider>
         <ComponentConfigProvider>
-          <OnChainThemeProvider>{children}</OnChainThemeProvider>
+          <ClientUserProvider>
+            <OnChainThemeProvider>{children}</OnChainThemeProvider>
+          </ClientUserProvider>
         </ComponentConfigProvider>
       </TooltipProvider>
     </ThemeProvider>

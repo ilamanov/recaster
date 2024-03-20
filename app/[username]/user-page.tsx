@@ -19,7 +19,7 @@ const Component = dynamic(() => import("@/components/near/component"), {
 // declare const Hls: any | undefined;
 
 async function followOrUnfollowUser(
-  authData: AuthData | null,
+  authData: AuthData | undefined | null,
   fid: number,
   follow: boolean
 ) {
@@ -91,7 +91,7 @@ export function UserPage({ user }: { user: UserSummaryProps }) {
         body: JSON.stringify({
           filterType: FilterType.Fids,
           forFids: [user.fid],
-          fid: authData === null ? undefined : authData.fid,
+          fid: authData === null ? undefined : authData?.fid,
         }),
       });
       const data = await res.json();
@@ -117,7 +117,7 @@ export function UserPage({ user }: { user: UserSummaryProps }) {
     }
 
     fetchFeed();
-  }, [authData, toast]);
+  }, [authData, toast, user.fid]);
 
   // function initializeHLS(videoElement: HTMLVideoElement) {
   //   var videoSrc = videoElement.getAttribute("data-src");

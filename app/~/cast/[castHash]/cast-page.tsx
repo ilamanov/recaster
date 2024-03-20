@@ -45,7 +45,7 @@ export function CastPage({ castHash }: { castHash: string }) {
         },
         body: JSON.stringify({
           castHash,
-          fid: authData === null ? undefined : authData.fid,
+          //   fid: authData === null ? undefined : authData.fid,
         }),
       });
 

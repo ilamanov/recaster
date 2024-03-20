@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { useInitNear, Widget } from "near-social-vm";
+
+const { useInitNear, Widget } = require("near-social-vm");
 
 export default function Component({ src, props }: { src: string; props: any }) {
   const { initNear } = useInitNear();

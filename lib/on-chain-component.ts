@@ -70,7 +70,7 @@ export async function fetchComponent({
       abi: FEED_ABI,
       functionName: "getComponent",
       args: [
-        data.map(convertCast),
+        (data as any).map(convertCast),
         colorTheme === "light" ? 0 : 1,
         screenSize === "sm" ? 0 : 1,
         themeComponentAddress,
@@ -102,10 +102,10 @@ export async function fetchComponent({
   }
 }
 
-function convertCast(cast: CastProps) {
+function convertCast(cast: CastProps): any {
   return {
     hash: cast.hash,
-    timeDelta: cast.timeDelta,
+    timestamp: cast.timestamp,
     text: cast.text,
     recastsCount: BigInt(cast.recastsCount),
     likesCount: BigInt(cast.likesCount),
@@ -127,7 +127,7 @@ function convertCast(cast: CastProps) {
         "cast" in embed
           ? {
               hash: embed.cast.hash,
-              timeDelta: embed.cast.timeDelta,
+              timestamp: embed.cast.timestamp,
               text: embed.cast.text,
               recastsCount: BigInt(embed.cast.recastsCount),
               likesCount: BigInt(embed.cast.likesCount),

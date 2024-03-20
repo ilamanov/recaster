@@ -139,7 +139,7 @@ export const LOCAL_TEST_COMPONENT_INNER_CAST = (
           <h3 class="text-lg font-bold">${author.displayName}</h3>
           <p class="text-muted-foreground">@${
             author.username
-          } • ${cast.timeDelta}</p>
+          } • ${cast.timestamp}</p>
         </div>
       </a>
 
@@ -186,7 +186,7 @@ const LOCAL_TEST_COMPONENT_EMBED_CAST = (
                 alt="${cast.author.username} profile picture"
             />
             <h3 class="text-lg font-bold">${cast.author.displayName}</h3>
-            <p class="text-muted-foreground">@${cast.author.username} • ${cast.timeDelta}</p>
+            <p class="text-muted-foreground">@${cast.author.username} • ${cast.timestamp}</p>
           </div>
           <p class="whitespace-pre-wrap break-words pt-[2px]">${cast.text}</p>
         </div>

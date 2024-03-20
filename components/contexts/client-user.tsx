@@ -9,7 +9,7 @@ import {
 import { AuthData, NEYNAR_AUTH_DATA_LOCAL_STORAGE_KEY } from "@/lib/neynar";
 
 interface ClientUserContextType {
-  authData: AuthData | null;
+  authData: AuthData | undefined | null;
   checkAuth: () => void;
   user: UserType | null;
   followingUsers: FollowResponseUser[] | null;

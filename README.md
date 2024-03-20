@@ -1,23 +1,23 @@
 Recaster is an on-chain <i>remixable</i> Farcaster client. Recaster allows you to remix your Farcaster experience to your liking. It's available at [recaster.vercel.app](https://recaster.vercel.app/).
 
-Recaster does not render most of the UI itself. Instead it fetches the UI (HTML) from Base Sepolia. So anyone can contribute their own components and personalize/remix their Farcaster experience.
+Recaster does not render most of the UI itself. Instead it fetches the UI (HTML) from the Near blockchain. So anyone can contribute their own components and personalize/remix their Farcaster experience.
 
 ## How does it work?
 
-This repo is a simple Next.js wrapper around the core on-chain components. The core components of the Farcaster client like the rendering of casts, the feed, the user profile, etc happens on-chain (on Base Sepolia). The Next.js wrapper is rendered off-chain. The Next.js wrapper serves the HTML returned from the on-chain contracts in an iframe.
+This repo is a simple Next.js wrapper around the core on-chain components. The core components of the Farcaster client like the rendering of casts, the feed, the user profile, etc happens on-chain (on Near blockchain). The Next.js wrapper is rendered off-chain. The Next.js wrapper serves the HTML returned from the on-chain contracts in kind of like an iframe.
 
 ![Components](assets/components.png)
 
 Here are the components used in the above screenshot:
 
-- User summary: [0x940303f089f4450a2398a8ed1c192929f070128b](https://sepolia.basescan.org/address/0x940303f089f4450a2398a8ed1c192929f070128b#code)
-- Feed: [0xa046db7dbaac6a26913af2007d3f0f5978001893](https://sepolia.basescan.org/address/0xa046db7dbaac6a26913af2007d3f0f5978001893#code)
-- Cast: [0x710c7f4dbe1ea035a3f75d1e6607bdb58b92f42f](https://sepolia.basescan.org/address/0x710c7f4dbe1ea035a3f75d1e6607bdb58b92f42f#code)
-- Theme: [0xe91b043472ba7067a898a42b1f1881713dd5c4b7](https://sepolia.basescan.org/address/0xe91b043472ba7067a898a42b1f1881713dd5c4b7#code)
+- User summary: [recaster.testnet/widget/UserSummary](/components/near-test/UserSummary.jsx)
+- Feed: [recaster.testnet/widget/Feed](/components/near-test/Feed.jsx)
+- Cast: [recaster.testnet/widget/Cast](/components/near-test/Cast.jsx)
+- Theme: [recaster.testnet/widget/Theme](https://sepolia.basescan.org/address/0xe91b043472ba7067a898a42b1f1881713dd5c4b7#code)
 
-There are additional component already deployed to Base Sepolia which you can use by entering the address in the `On-chain component config` on the right bar of Recaster.
+There are additional component already deployed to Near blockchain which you can use by entering the address in the `On-chain component config` on the right bar of Recaster.
 
-- Neobrutalism theme: [0x23f943b9bf6b6f0791ca17126ff89c2968abd6a1](https://sepolia.basescan.org/address/0x23f943b9bf6b6f0791ca17126ff89c2968abd6a1#code)
+- Neobrutalism theme: [recaster.testnet/widget/Neobrutalism](https://sepolia.basescan.org/address/0x23f943b9bf6b6f0791ca17126ff89c2968abd6a1#code)
 
 Here is what Neobrutalism theme looks like:
 ![neobrutalism](assets/neobrutalism.png)
@@ -30,15 +30,13 @@ If you want to go fully trustless, you can clone this repo and serve your own wr
 
 UI components and smart contracts have a lot in common. They are bother very composable and benefit from being decentralized.
 
-On-chain UI might look ugly (see screenshot below) and probably wasteful for blockchain storage but having the UI code on-chain opens up lots of opportunities.
-
-For example, it allows us to build products in a decentralized manner. Imagine building an Etherscan clone (or a Farcaster client). Someones builds a search bar, someone else builds a transaction table, etc. And the whole product can be built by small contributions from a lot of people. And these contributions can be rewarded by tokens or NFTs.
+On-chain UI allows us to build products in a decentralized manner. Imagine building an Etherscan clone (or a Farcaster client). Someones builds a search bar, someone else builds a transaction table, etc. And the whole product can be built by small contributions from a lot of people. And these contributions can be rewarded by tokens or NFTs.
 
 On-chain UI also opens up opportunities for UI marketplaces. People can create pretty UI components and others can use them in their projects for a small fee.
 
-Here is the `UserSummary` component to demonstrate what on-chain UI looks like. It looks ugly but with the right tooling in the future, it can be made much better.
+Here is the `UserSummary` component to demonstrate what on-chain UI looks like.
 
-![user summary component](assets/on-chain-contract.png)
+![user summary component](assets/on-chain-ui.png)
 
 ## Want to work together?
 

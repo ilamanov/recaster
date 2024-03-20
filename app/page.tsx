@@ -1,18 +1,10 @@
 import Link from "next/link";
-import { FilterType } from "@neynar/nodejs-sdk";
 
-import { getFeed } from "@/lib/neynar";
-import { ErrorMessage } from "@/components/ui/error-message";
-import { OnChainComponent } from "@/components/on-chain-component";
 import { Search } from "@/components/search";
 
-export default async function HomePage({}: {}) {
-  const feed = await getFeed(FilterType.GlobalTrending, []);
+import { HomePage } from "./home-page";
 
-  if (!feed) {
-    return <ErrorMessage message="Error fetching feed" />;
-  }
-
+export default async function HomePageServer({}: {}) {
   return (
     <>
       <div className="w-full">
@@ -37,15 +29,8 @@ export default async function HomePage({}: {}) {
           Check out your favorite person&apos;s feed!
         </p>
         <Search />
-        <p className="py-6 text-lg border-b-[2px]">
-          Or check out trending casts below!
-        </p>
       </div>
-      <OnChainComponent
-        componentType="feed"
-        data={feed}
-        iframeClassName="h-[100vh] w-full"
-      />
+      <HomePage />
     </>
   );
 }

@@ -3,6 +3,7 @@
 import React, { ReactNode, useEffect } from "react";
 import { ThemeProvider } from "next-themes";
 
+import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ClientUserProvider } from "@/components/contexts/client-user";
 import { ComponentConfigProvider } from "@/components/contexts/component-config";
@@ -42,7 +43,10 @@ export function Providers({ children }: { children: ReactNode }) {
       <TooltipProvider>
         <ComponentConfigProvider>
           <ClientUserProvider>
-            <OnChainThemeProvider>{children}</OnChainThemeProvider>
+            <OnChainThemeProvider>
+              {children}
+              <Toaster />
+            </OnChainThemeProvider>
           </ClientUserProvider>
         </ComponentConfigProvider>
       </TooltipProvider>

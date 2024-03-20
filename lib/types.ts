@@ -13,6 +13,9 @@ export interface CastProps {
   hash: string;
   timestamp: string;
   text: string;
+  reactions?: {
+    liked?: boolean;
+  };
   recastsCount: number;
   likesCount: number;
   repliesCount: number;

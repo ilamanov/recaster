@@ -24,7 +24,9 @@ export function ClientUserProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [authData, setAuthData] = useState<AuthData | null>(null);
+  const [authData, setAuthData] = useState<AuthData | undefined | null>(
+    undefined
+  );
   const [user, setUser] = useState<UserType | null>(null);
   const [followingUsers, setFollowingUsers] = useState<
     FollowResponseUser[] | null
@@ -36,6 +38,8 @@ export function ClientUserProvider({
     );
     if (localAuthData) {
       setAuthData(JSON.parse(localAuthData));
+    } else {
+      setAuthData(null);
     }
   }, []);
 
@@ -56,7 +60,7 @@ export function ClientUserProvider({
               fid,
             }),
           }).then((res) => res.json()),
-          fetch(`/api/user-following`, {
+          fetch(`/api/user/following`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

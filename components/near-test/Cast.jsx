@@ -3,6 +3,9 @@ const fakeProps = {
   timestamp: "2024-03-06T03:48:05.000Z",
   // text: "Voted yes for this one. Nouns builders have the potential to do something special here.",
   text: "Cool new game frame from @tldr for March Madness",
+  reactions: {
+    liked: true
+  },
   author: {
       username: "seneca",
       displayName: "seneca",
@@ -33,7 +36,7 @@ https://www.nouns.camp/proposals/509`,
   },
   repliesCount: 14,
   recastsCount: 3,
-  likesCount: 23
+  likesCount: 23,
 }
 
 const cast = "hash" in props ? props : fakeProps;
@@ -147,10 +150,12 @@ const renderWord = (word) => {
 };
 
 const richText = [];
-cast.text.split(' ').forEach((word, index) => {
-  richText.push(renderWord(word));
-  richText.push(' '); // Add space back in since we split by spaces
-});
+if (cast.text.length > 0) {
+  cast.text.split(' ').forEach((word) => {
+    richText.push(renderWord(word));
+    richText.push(' '); // Add space back in since we split by spaces
+  });
+}
 
 const embeds = cast.embeds.map(embed => {
   if ("cast" in embed) {
@@ -160,20 +165,26 @@ const embeds = cast.embeds.map(embed => {
       </PrettyLink>
     )
   } 
-  else if ("embedUrl" in embed) {
+
+  let embedElement;
+  if ("embedUrl" in embed) {
     const embedUrl = embed.embedUrl;
     if (embedUrl.startsWith("https://stream") && embedUrl.endsWith(".m3u8")) {
       // return <video data-src={embedUrl} controls className="rc-video-player mt-2" style={{maxHeight: 300}}></video>;
-      return <div className="fst-italic" style={{color: "hsl(var(--muted-foreground))"}}>[Videos will be supported soon]</div>;
-    } else if (
-      embedUrl.startsWith("https://i.imgur.com/") &&
-      (embedUrl.endsWith(".png") || embedUrl.endsWith(".jpg"))
-    ) {
-      return <img src={embedUrl} alt="Embedded Image" className="mt-2" style={{maxHeight: 300}} />;
+      embedElement = (<div className="fst-italic" style={{color: "hsl(var(--muted-foreground))"}}>[Videos are not yet supported]</div>);
+    } else if (embedUrl.startsWith("https://i.imgur.com/")) {
+      embedElement = (<img src={embedUrl} alt="Embedded Image" className="mt-2" style={{maxHeight: 300}} />);
+    } else {
+      embedElement = (<div className="fst-italic" style={{color: "hsl(var(--muted-foreground))"}}>[Unsupported embed: {embedUrl}]</div>);
     }
-    return <div className="fst-italic" style={{color: "hsl(var(--muted-foreground))"}}>[Unsupported embed: {embedUrl}]</div>
+  } else {
+    embedElement = (<div className="fst-italic" style={{color: "hsl(var(--muted-foreground))"}}>[Unsupported embed: {JSON.stringify(embed)}]</div>);
   }
-  return <div className="fst-italic" style={{color: "hsl(var(--muted-foreground))"}}>[Unsupported embed: {JSON.stringify(embed)}]</div>
+  return (
+    <PrettyLink href={`/cast/${cast.hash}`} target="_top">
+      {embedElement}
+    </PrettyLink>
+  )
 });
 
 let channel;
@@ -231,9 +242,11 @@ return (
         </div>
       </a>
 
-      <PrettyLink href={`/cast/${cast.hash}`} target="_top">
-        <p className="text-break mb-1" style={{whiteSpace: "pre-wrap"}}>{richText}</p>
-      </PrettyLink>
+      {richText.length > 0 && (
+        <PrettyLink href={`/cast/${cast.hash}`} target="_top">
+          <p className="text-break mb-1" style={{whiteSpace: "pre-wrap"}}>{richText}</p>
+        </PrettyLink>
+      )}
       {embeds}
       {channel}
       <div className="d-flex justify-content-between mt-4 px-4">
@@ -245,11 +258,18 @@ return (
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></svg>
           {" "}<span>{formatCompactNumber(cast.recastsCount)}</span>
         </PrettyButton>
-        <PrettyButton className="d-flex gap-1">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+        <PrettyButton className="d-flex gap-1" onClick={() => {
+          const callback = props.onLike;
+          if (callback) {
+            callback();
+          }
+        }}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill={props.reactions?.liked ? "red" : "none"} stroke={props.reactions?.liked ? "red" : "currentColor"} strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
           {" "}<span>{formatCompactNumber(cast.likesCount)}</span>
         </PrettyButton>
-        <PrettyButton className="d-flex gap-1">
+        <PrettyButton className="d-flex gap-1" onClick={() => {
+          clipboard.writeText(`${props.appUrl || ""}/cast/${cast.hash}`)
+        }}>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg>
         </PrettyButton>
       </div>

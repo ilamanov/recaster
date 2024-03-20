@@ -34,7 +34,7 @@ export function LeftColumn() {
         <Link href="/" className={LINK_CLASS}>
           <Home className={ICON_CLASS} /> Home
         </Link>
-        <Link href="/explore" className={LINK_CLASS}>
+        <Link href="/~/explore" className={LINK_CLASS}>
           <Search className={ICON_CLASS} /> Explore
         </Link>
       </div>

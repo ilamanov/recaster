@@ -44,7 +44,11 @@ return (
     className="p-3 rounded-2 d-flex flex-column gap-4"
   >
     {feed.casts.map((cast) => {
-      return <Widget src={"recaster.testnet/widget/Cast"} props={cast} />;
+      return <Widget src={"recaster.testnet/widget/Cast"} props={{
+        ...cast,
+        appUrl: props.appUrl,
+        onLike: () => props.onLike(cast.hash),
+      }} />;
     })}
   </DivWithColors>
 );

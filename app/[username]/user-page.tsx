@@ -9,7 +9,6 @@ import { CastProps, UserSummaryProps } from "@/lib/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ClientUserContext } from "@/components/contexts/client-user";
 import { ComponentConfigContext } from "@/components/contexts/component-config";
-import { OnChainComponent } from "@/components/on-chain-component";
 
 const Component = dynamic(() => import("@/components/near/component"), {
   ssr: false,
@@ -28,7 +27,7 @@ async function followOrUnfollowUser(
     return false;
   }
 
-  const rest = await fetch(follow ? "/api/follow-user" : "/api/unfollow-user", {
+  const res = await fetch(follow ? "/api/user/follow" : "/api/user/unfollow", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -38,7 +37,7 @@ async function followOrUnfollowUser(
       fid,
     }),
   });
-  const result: BulkFollowResponse = await rest.json();
+  const result: BulkFollowResponse = await res.json();
 
   if (!result.success || !result.details[0].success) {
     console.error(follow ? "Error following user" : "Error unfollowing user");
@@ -148,11 +147,15 @@ export function UserPage({
           )}
         </TabsContent>
         <TabsContent value="casts-replies">
-          <OnChainComponent
-            componentType="feed"
-            data={feed}
-            iframeClassName="h-[80vh] w-[60vw]"
-          />
+          {componentConfig && (
+            <Component
+              src={componentConfig.feed}
+              props={{
+                casts: feed,
+                appUrl: "https://recaster.vercel.app",
+              }}
+            />
+          )}
         </TabsContent>
       </Tabs>
     </>

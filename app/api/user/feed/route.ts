@@ -1,15 +1,15 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-import { client } from "@/lib/neynar";
+import { getFollowingFeed } from "@/lib/neynar";
 
 export async function POST(req: NextRequest) {
   const json = await req.json();
 
   try {
-    const clientResponse = await client.lookupUserByFid(parseInt(json.fid));
-    return NextResponse.json({ user: clientResponse.result.user });
+    const feed = await getFollowingFeed(parseInt(json.fid));
+    return NextResponse.json({ feed });
   } catch (error: any) {
-    console.error("Error in user endpoint", error);
+    console.error("Error in user/feed endpoint", error);
     return NextResponse.json(
       {
         error: error.toString(),

@@ -7,11 +7,11 @@ export async function POST(req: NextRequest) {
 
   try {
     const clientResponse = await client.unfollowUser(json.signerUuid, [
-      json.fid,
+      parseInt(json.fid),
     ]);
     return NextResponse.json(clientResponse);
   } catch (error: any) {
-    console.error("Error in unfollow-user endpoint", error);
+    console.error("Error in user/unfollow endpoint", error);
     return NextResponse.json(
       {
         error: error.toString(),

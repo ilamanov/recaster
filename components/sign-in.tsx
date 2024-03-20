@@ -33,7 +33,7 @@ export function SignIn() {
     throw new Error("ClientUserContext is null");
   }
 
-  const { checkAuth, user } = clientUserContext;
+  const { authData, checkAuth, user } = clientUserContext;
 
   useEffect(() => {
     window.onSignInSuccess = (data: AuthData) => {
@@ -67,8 +67,31 @@ export function SignIn() {
   //   </ThirdwebProvider>
   // );
 
-  return user ? (
-    <Link href="/profile">
+  if (authData === undefined) {
+    return null;
+  }
+
+  if (authData === null) {
+    return (
+      <>
+        <div
+          className="neynar_signin"
+          data-client_id={process.env.NEXT_PUBLIC_NEYNAR_CLIENT_ID}
+          data-success-callback="onSignInSuccess"
+          data-theme={resolvedTheme}
+          data-text="Sign in"
+          data-styles='{ "height": "fit-content", "width": "fit-content", "min-width": "unset", "padding": "6px 15px", "background-color": "transparent", "color": "black" }'
+        ></div>
+        <Script
+          src="https://neynarxyz.github.io/siwn/raw/1.2.0/index.js"
+          async
+        ></Script>
+      </>
+    );
+  }
+
+  return (
+    <Link href="/~/profile">
       {user ? (
         <img
           src={user.pfp.url}
@@ -81,26 +104,12 @@ export function SignIn() {
         <div className="w-10 h-10 flex justify-center items-center">
           <User
             className={iconVariants({
-              size: "lg",
+              size: "md",
+              variant: "ghost",
             })}
           />
         </div>
       )}
     </Link>
-  ) : (
-    <>
-      <div
-        className="neynar_signin"
-        data-client_id={process.env.NEXT_PUBLIC_NEYNAR_CLIENT_ID}
-        data-success-callback="onSignInSuccess"
-        data-theme={resolvedTheme}
-        data-text="Sign in"
-        data-styles='{ "height": "fit-content", "width": "fit-content", "min-width": "unset", "padding": "6px 15px" }'
-      ></div>
-      <Script
-        src="https://neynarxyz.github.io/siwn/raw/1.2.0/index.js"
-        async
-      ></Script>
-    </>
   );
 }

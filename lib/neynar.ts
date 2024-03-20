@@ -8,7 +8,10 @@ import {
   CastWithInteractions as CastWithInteractionsV1,
   FollowResponseUser,
 } from "@neynar/nodejs-sdk/build/neynar-api/v1";
-import { CastWithInteractions as CastWithInteractionsV2 } from "@neynar/nodejs-sdk/build/neynar-api/v2";
+import {
+  CastWithInteractions as CastWithInteractionsV2,
+  ReactionsType,
+} from "@neynar/nodejs-sdk/build/neynar-api/v2";
 
 import { getPostedInChannel, isEmbedACast } from "./farcaster";
 import { CastEmbed, CastProps, UserSummaryProps } from "./types";
@@ -44,6 +47,18 @@ export async function getUser(
   }
 }
 
+async function getReactions(fid: number, type: ReactionsType) {
+  try {
+    const reactions = await client.fetchUserReactions(fid, type, {
+      limit: 100,
+    });
+    return reactions.reactions;
+  } catch (e) {
+    console.error("Error fetching reactions", e);
+    return null;
+  }
+}
+
 export async function getCast(castHash: string): Promise<CastProps | null> {
   try {
     const cast = (await client.lookUpCastByHash(castHash)).result.cast;
@@ -55,7 +70,11 @@ export async function getCast(castHash: string): Promise<CastProps | null> {
 }
 
 async function convertCast(
-  cast: CastWithInteractionsV1 | CastWithInteractionsV2
+  cast: CastWithInteractionsV1 | CastWithInteractionsV2,
+  reactions?: {
+    fid: number;
+    // likes: Reactions[];
+  }
 ): Promise<CastProps> {
   // const reactionsHashes = (
   //   await client.fetchCastReactions(cast.hash)
@@ -144,16 +163,31 @@ async function convertCast(
     }
   }
 
+  const likedByFids =
+    "likes" in cast.reactions
+      ? cast.reactions.likes.map((like) => like.fid)
+      : cast.reactions.fids;
+
+  if (cast.hash === "0x55cc92f35945d0d6e6d864c41ad8b90adb6021dd") {
+    console.log(
+      "likedByFids",
+      likedByFids,
+      reactions?.fid,
+      typeof likedByFids[0],
+      typeof reactions?.fid
+    );
+  }
+
   return {
     hash: cast.hash,
     timestamp: cast.timestamp,
     text: cast.text,
+    reactions: {
+      liked: likedByFids.some((fid) => fid === reactions?.fid),
+    },
     recastsCount:
       "recasts" in cast ? cast.recasts.count : cast.reactions.recasts.length,
-    likesCount:
-      "likes" in cast.reactions
-        ? cast.reactions.likes.length
-        : cast.reactions.count,
+    likesCount: likedByFids.length,
     repliesCount: cast.replies.count,
     author,
     channel,
@@ -169,8 +203,31 @@ export async function getFeed(
     const feedResult = await client.fetchFeed(FeedType.Filter, {
       filterType,
       fids: forFids,
+      limit: 50,
     });
     return await Promise.all(feedResult.casts.map((cast) => convertCast(cast)));
+  } catch (e) {
+    console.error("Error fetching feed", e);
+    return null;
+  }
+}
+
+export async function getFollowingFeed(
+  fid: number
+): Promise<CastProps[] | null> {
+  try {
+    const feedResult = await client.fetchUserFollowingFeed(fid, {
+      limit: 50,
+    });
+    // const likes = await getReactions(fid, ReactionsType.Likes);
+    return await Promise.all(
+      feedResult.casts.map((cast) =>
+        convertCast(cast, {
+          fid,
+          // likes: likes || []
+        })
+      )
+    );
   } catch (e) {
     console.error("Error fetching feed", e);
     return null;

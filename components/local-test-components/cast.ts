@@ -78,7 +78,7 @@ export const LOCAL_TEST_COMPONENT_INNER_CAST = (
   if (cast.embeds.length > 0) {
     const firstEmbed = cast.embeds[0];
     if ("cast" in firstEmbed) {
-      embed = `<a href="/cast/${firstEmbed.cast.hash}" target="_top">
+      embed = `<a href="/~/cast/${firstEmbed.cast.hash}" target="_top">
         ${LOCAL_TEST_COMPONENT_EMBED_CAST(
           firstEmbed.cast,
           colorTheme,
@@ -143,7 +143,7 @@ export const LOCAL_TEST_COMPONENT_INNER_CAST = (
         </div>
       </a>
 
-      <a href="/cast/${cast.hash}" target="_top">
+      <a href="/~/cast/${cast.hash}" target="_top">
         <p class="whitespace-pre-wrap break-words pt-[2px]">LOCAL TEST - ${cast.text}</p>
       </a>
       ${embed}

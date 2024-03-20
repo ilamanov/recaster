@@ -59,10 +59,13 @@ async function getReactions(fid: number, type: ReactionsType) {
   }
 }
 
-export async function getCast(castHash: string): Promise<CastProps | null> {
+export async function getCast(
+  castHash: string,
+  fid?: number
+): Promise<CastProps | null> {
   try {
     const cast = (await client.lookUpCastByHash(castHash)).result.cast;
-    return await convertCast(cast);
+    return await convertCast(cast, fid ? { fid } : undefined);
   } catch (e) {
     console.error("Error fetching cast", e);
     return null;
@@ -187,7 +190,8 @@ async function convertCast(
 
 export async function getFeed(
   filterType: FilterType,
-  forFids: number[]
+  forFids: number[],
+  fid?: number
 ): Promise<CastProps[] | null> {
   try {
     const feedResult = await client.fetchFeed(FeedType.Filter, {
@@ -195,7 +199,11 @@ export async function getFeed(
       fids: forFids,
       limit: 50,
     });
-    return await Promise.all(feedResult.casts.map((cast) => convertCast(cast)));
+    return await Promise.all(
+      feedResult.casts.map((cast) =>
+        convertCast(cast, fid ? { fid } : undefined)
+      )
+    );
   } catch (e) {
     console.error("Error fetching feed", e);
     return null;

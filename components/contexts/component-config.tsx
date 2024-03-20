@@ -6,7 +6,7 @@ import { Address } from "viem";
 export interface ComponentConfig {
   userSummary: string;
   feed: string;
-  cast: Address;
+  cast: string;
   theme: Address;
 }
 
@@ -34,7 +34,7 @@ export function ComponentConfigProvider({
       setComponentConfig({
         userSummary: "recaster.testnet/widget/UserSummary",
         feed: "recaster.testnet/widget/Feed",
-        cast: "0x710c7f4dbe1ea035a3f75d1e6607bdb58b92f42f",
+        cast: "recaster.testnet/widget/Cast",
         theme: "0xe91b043472ba7067a898a42b1f1881713dd5c4b7",
       });
     } else {

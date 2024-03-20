@@ -2,6 +2,7 @@
 
 import { useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { FilterType } from "@neynar/nodejs-sdk";
 
 import { CastProps } from "@/lib/types";
 import { ErrorMessage } from "@/components/ui/error-message";
@@ -43,11 +44,14 @@ export function HomePage({}: {}) {
       let res;
       if (authData === null) {
         // user is not signed in
-        res = await fetch(`/api/signed-out/trending-feed`, {
-          method: "GET",
+        res = await fetch(`/api/feed`, {
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
+          body: JSON.stringify({
+            filterType: FilterType.GlobalTrending,
+          }),
         });
       } else {
         res = await fetch(`/api/user/feed`, {
@@ -124,44 +128,51 @@ export function HomePage({}: {}) {
         props={{
           casts: feed,
           appUrl: "https://recaster.vercel.app",
-          onLike: async (castHash: string) => {
-            const res = await fetch("/api/cast/react", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                signerUuid: authData?.signer_uuid,
-                reaction: "like",
-                castHash: castHash,
-              }),
-            });
-            const result = await res.json();
-            if ("error" in result) {
-              toast({
-                title: "Error liking the cast",
-                description: result.error,
-                variant: "destructive",
-              });
-              return;
+          onLike: (castHash: string) => {
+            if (authData) {
+              fetch("/api/cast/react", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  signerUuid: authData.signer_uuid,
+                  reaction: "like",
+                  castHash: castHash,
+                }),
+              })
+                .then((res) => res.json())
+                .then((result) => {
+                  if ("error" in result) {
+                    throw new Error(result.error);
+                  }
+
+                  setFeed((oldFeed) => {
+                    if (!oldFeed) {
+                      return oldFeed;
+                    }
+                    return oldFeed.map((cast) => {
+                      if (cast.hash === castHash) {
+                        return {
+                          ...cast,
+                          reactions: {
+                            liked: true,
+                          },
+                          likesCount: cast.likesCount + 1,
+                        };
+                      }
+                      return cast;
+                    });
+                  });
+                })
+                .catch((err) => {
+                  toast({
+                    title: "Error liking the cast",
+                    description: err.toString(),
+                    variant: "destructive",
+                  });
+                });
             }
-            setFeed((oldFeed) => {
-              if (!oldFeed) {
-                return oldFeed;
-              }
-              return oldFeed.map((cast) => {
-                if (cast.hash === castHash) {
-                  return {
-                    ...cast,
-                    reactions: {
-                      liked: true,
-                    },
-                    likesCount: cast.likesCount + 1,
-                  };
-                }
-                return cast;
-              });
-            });
           },
         }}
       />

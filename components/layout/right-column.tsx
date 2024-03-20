@@ -17,9 +17,6 @@ import {
 const USER_SUMMARY_SUGGESTIONS: Address[] = [];
 const FEED_SUGGESTIONS: Address[] = [];
 const CAST_SUGGESTIONS: Address[] = [];
-const THEME_SUGGESTIONS: Address[] = [
-  "0x23f943b9bf6b6f0791ca17126ff89c2968abd6a1",
-];
 
 export function RightColumn() {
   const componentConfigContext = useContext(ComponentConfigContext);
@@ -71,11 +68,6 @@ function Inner({
 
           let errors = false;
 
-          if (!isAddress(cast)) {
-            setCastError("Invalid address");
-            errors = true;
-          }
-
           if (!isAddress(theme)) {
             setThemeError("Invalid address");
             errors = true;
@@ -97,16 +89,29 @@ function Inner({
         <div>
           <h2 className="text-base font-bold">Onchain component config</h2>
           <h2 className="text-base">
-            Enter component addresses below. All contracts are on Base Sepolia.
+            Enter component addresses below. All contracts are on the Near
+            blockchain.
           </h2>
         </div>
 
         <ComponentSelector
           label="Theme"
           id="theme-component"
-          value={theme}
+          value={
+            theme === "0xe91b043472ba7067a898a42b1f1881713dd5c4b7"
+              ? "recaster.testnet/widget/Theme"
+              : theme === "0x23f943b9bf6b6f0791ca17126ff89c2968abd6a1"
+                ? "recaster.testnet/widget/Neobrutalism"
+                : theme
+          }
           setValue={setTheme}
-          suggestions={THEME_SUGGESTIONS}
+          suggestions={
+            theme === "0x23f943b9bf6b6f0791ca17126ff89c2968abd6a1"
+              ? ["0xe91b043472ba7067a898a42b1f1881713dd5c4b7"]
+              : theme === "0xe91b043472ba7067a898a42b1f1881713dd5c4b7"
+                ? ["0x23f943b9bf6b6f0791ca17126ff89c2968abd6a1"]
+                : ["0xe91b043472ba7067a898a42b1f1881713dd5c4b7"]
+          }
           error={themeError}
         />
 
@@ -184,7 +189,11 @@ function ComponentSelector({
               setValue(address);
             }}
           >
-            {address.slice(0, 5)}...{address.slice(-4)}
+            {address === "0x23f943b9bf6b6f0791ca17126ff89c2968abd6a1"
+              ? "recaster.testnet/widget/Neobrutalism"
+              : address === "0xe91b043472ba7067a898a42b1f1881713dd5c4b7"
+                ? "recaster.testnet/widget/Theme"
+                : `${address.slice(0, 5)}...${address.slice(-4)}`}
           </Badge>
         ))}
       </div>

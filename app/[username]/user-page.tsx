@@ -1,12 +1,14 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
+import { FilterType } from "@neynar/nodejs-sdk";
 import { BulkFollowResponse } from "@neynar/nodejs-sdk/build/neynar-api/v2";
 
 import { AuthData } from "@/lib/neynar";
 import { CastProps, UserSummaryProps } from "@/lib/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/components/ui/use-toast";
 import { ClientUserContext } from "@/components/contexts/client-user";
 import { ComponentConfigContext } from "@/components/contexts/component-config";
 
@@ -47,14 +49,11 @@ async function followOrUnfollowUser(
   return true;
 }
 
-export function UserPage({
-  user,
-  feed,
-}: {
-  user: UserSummaryProps;
-  feed: CastProps[];
-}) {
+export function UserPage({ user }: { user: UserSummaryProps }) {
   const [isFollowing, setIsFollowing] = useState(false);
+  const [feed, setFeed] = useState<CastProps[] | null>(null);
+
+  const { toast } = useToast();
 
   const clientUserContext = useContext(ClientUserContext);
   const componentConfigContext = useContext(ComponentConfigContext);
@@ -69,8 +68,6 @@ export function UserPage({
   const { authData, followingUsers } = clientUserContext;
   const componentConfig = componentConfigContext.componentConfig;
 
-  const castsOnly = feed.filter((cast) => cast.author.fid === user.fid);
-
   useEffect(() => {
     if (!isFollowing && followingUsers) {
       setIsFollowing(
@@ -78,6 +75,49 @@ export function UserPage({
       );
     }
   }, [isFollowing, user.fid, followingUsers]);
+
+  useEffect(() => {
+    if (authData === undefined) {
+      // have not yet decided whether user is signed in or not
+      return;
+    }
+
+    async function fetchFeed() {
+      const res = await fetch(`/api/feed`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          filterType: FilterType.Fids,
+          forFids: [user.fid],
+          fid: authData === null ? undefined : authData.fid,
+        }),
+      });
+      const data = await res.json();
+
+      if ("error" in data) {
+        toast({
+          title: "Error fetching feed",
+          description: data.error,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (!data.feed) {
+        toast({
+          title: "No feed found",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setFeed(data.feed);
+    }
+
+    fetchFeed();
+  }, [authData, toast]);
 
   // function initializeHLS(videoElement: HTMLVideoElement) {
   //   var videoSrc = videoElement.getAttribute("data-src");
@@ -103,6 +143,12 @@ export function UserPage({
   //   var videoPlayers = document.querySelectorAll(".rc-video-player");
   //   videoPlayers.forEach((p) => initializeHLS(p as HTMLVideoElement));
   // }, []);
+
+  const castsOnly = useMemo(() => {
+    return feed === null
+      ? null
+      : feed.filter((cast) => cast.author.fid === user.fid);
+  }, [feed, user.fid]);
 
   return (
     <>
@@ -136,23 +182,115 @@ export function UserPage({
           <TabsTrigger value="casts-replies">Casts + Replies</TabsTrigger>
         </TabsList>
         <TabsContent value="casts">
-          {componentConfig && (
+          {componentConfig && castsOnly !== null && (
             <Component
               src={componentConfig.feed}
               props={{
                 casts: castsOnly,
                 appUrl: "https://recaster.vercel.app",
+                onLike: (castHash: string) => {
+                  if (authData) {
+                    fetch("/api/cast/react", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        signerUuid: authData.signer_uuid,
+                        reaction: "like",
+                        castHash: castHash,
+                      }),
+                    })
+                      .then((res) => res.json())
+                      .then((result) => {
+                        if ("error" in result) {
+                          throw new Error(result.error);
+                        }
+
+                        setFeed((oldFeed) => {
+                          if (!oldFeed) {
+                            return oldFeed;
+                          }
+                          return oldFeed.map((cast) => {
+                            if (cast.hash === castHash) {
+                              return {
+                                ...cast,
+                                reactions: {
+                                  liked: true,
+                                },
+                                likesCount: cast.likesCount + 1,
+                              };
+                            }
+                            return cast;
+                          });
+                        });
+                      })
+                      .catch((err) => {
+                        toast({
+                          title: "Error liking the cast",
+                          description: err.toString(),
+                          variant: "destructive",
+                        });
+                      });
+                  }
+                },
               }}
             />
           )}
         </TabsContent>
         <TabsContent value="casts-replies">
-          {componentConfig && (
+          {componentConfig && feed !== null && (
             <Component
               src={componentConfig.feed}
               props={{
                 casts: feed,
                 appUrl: "https://recaster.vercel.app",
+                onLike: (castHash: string) => {
+                  if (authData) {
+                    fetch("/api/cast/react", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        signerUuid: authData.signer_uuid,
+                        reaction: "like",
+                        castHash: castHash,
+                      }),
+                    })
+                      .then((res) => res.json())
+                      .then((result) => {
+                        if ("error" in result) {
+                          throw new Error(result.error);
+                        }
+
+                        setFeed((oldFeed) => {
+                          if (!oldFeed) {
+                            return oldFeed;
+                          }
+                          return oldFeed.map((cast) => {
+                            if (cast.hash === castHash) {
+                              return {
+                                ...cast,
+                                reactions: {
+                                  liked: true,
+                                },
+                                likesCount: cast.likesCount + 1,
+                              };
+                            }
+                            return cast;
+                          });
+                        });
+                      })
+                      .catch((err) => {
+                        toast({
+                          title: "Error liking the cast",
+                          description: err.toString(),
+                          variant: "destructive",
+                        });
+                      });
+                  }
+                },
               }}
             />
           )}

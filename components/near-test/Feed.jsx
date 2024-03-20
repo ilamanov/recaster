@@ -47,7 +47,10 @@ return (
       return <Widget src={"recaster.testnet/widget/Cast"} props={{
         ...cast,
         appUrl: props.appUrl,
-        onLike: () => props.onLike(cast.hash),
+        onLike: () => {
+          const callback = props.onLike;
+          if (callback) callback(cast.hash);
+        },
       }} />;
     })}
   </DivWithColors>

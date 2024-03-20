@@ -2,6 +2,7 @@
 
 import { useContext, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
+import { Address } from "viem";
 
 import { fetchComponent } from "@/lib/on-chain-component";
 import { OnChainComponentProps } from "@/lib/types";
@@ -27,7 +28,9 @@ export function OnChainComponent({
   useEffect(() => {
     if (componentConfigContext.componentConfig !== null) {
       fetchComponent({
-        address: componentConfigContext.componentConfig[componentType],
+        address: componentConfigContext.componentConfig[
+          componentType
+        ] as Address,
         componentType: componentType as any,
         data: data as any,
         colorTheme: resolvedTheme || "dark",

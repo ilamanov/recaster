@@ -168,16 +168,6 @@ async function convertCast(
       ? cast.reactions.likes.map((like) => like.fid)
       : cast.reactions.fids;
 
-  if (cast.hash === "0x55cc92f35945d0d6e6d864c41ad8b90adb6021dd") {
-    console.log(
-      "likedByFids",
-      likedByFids,
-      reactions?.fid,
-      typeof likedByFids[0],
-      typeof reactions?.fid
-    );
-  }
-
   return {
     hash: cast.hash,
     timestamp: cast.timestamp,

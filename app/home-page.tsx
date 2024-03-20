@@ -34,8 +34,6 @@ export function HomePage({}: {}) {
   const componentConfig = componentConfigContext.componentConfig;
 
   useEffect(() => {
-    console.log("fetching feed", authData);
-
     if (authData === undefined) {
       // have not yet decided whether user is signed in or not
       return;
@@ -74,8 +72,6 @@ export function HomePage({}: {}) {
         setError("No feed found");
         return;
       }
-
-      console.log("setting feed", data.feed);
 
       setFeed(data.feed);
     }

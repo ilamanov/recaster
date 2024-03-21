@@ -4,6 +4,8 @@ Recaster does not render most of the UI itself. Instead it fetches the UI (HTML)
 
 ## How does it work?
 
+[Video walkthrough](https://www.youtube.com/watch?v=N4lW1g_sle4)
+
 This repo is a simple Next.js wrapper around the core on-chain components. The core components of the Farcaster client like the rendering of casts, the feed, the user profile, etc happens on-chain (on Near blockchain). The Next.js wrapper is rendered off-chain. The Next.js wrapper serves the HTML returned from the on-chain contracts in kind of like an iframe.
 
 ![Components](assets/components.png)
